@@ -12,8 +12,18 @@ const unlinkFile = util.promisify(fs.unlink);
 
 // const multerS3 = require("multer-s3-v2");
 // const { s3, getImageStream, deleteImage } = require("./s3.js");
-const { dbConnection } = require("./db.js");
+// const { dbConnection } = require("./db.js");
 require("dotenv").config();
+
+// const dbConnection = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+// });
+
+const dbConnection = mysql.createConnection(process.env.DB_URL);
 
 const session = require("express-session");
 
