@@ -23,6 +23,8 @@ require("dotenv").config();
 //     database: process.env.DB_NAME,
 // });
 
+const mysql = require('mysql2');
+
 const dbConnection = mysql.createConnection(process.env.DB_URL);
 
 const session = require("express-session");
