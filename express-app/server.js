@@ -130,7 +130,7 @@ app.get("/user-settings", (req, res) => {
 
 const cors = require('cors');
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://thesis-webpage-v10-production.up.railway.app/',
     credentials: true
   }));
 
