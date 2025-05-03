@@ -59,7 +59,7 @@ def get_image_from_db(user_id):
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
+    allow_origins=["https://thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -345,7 +345,7 @@ def save_extracted_medicines_to_json(extracted_medicine_names):
 
     # Notify the API server about the new extracted medicines
     try:
-        response = requests.post("thesis-webpage-v10-production-c1fa.up.railway.app/process-image", json={"medicineArray": extracted_medicine_names}) # GOOGLE_VISION API
+        response = requests.post("https://thesis-webpage-v10-production-c1fa.up.railway.app/process-image", json={"medicineArray": extracted_medicine_names}) # GOOGLE_VISION API
         if response.status_code == 200:
             print("Successfully notified the API server.")
         else:

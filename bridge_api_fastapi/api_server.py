@@ -13,7 +13,7 @@ app = FastAPI()
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
+    allow_origins=["https://thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,7 +70,7 @@ async def process_image(request: Request):
     try:
         # Forward the proxy URL to googleVision.py
         response = requests.post(
-            "thesis-webpage-v10-production-c1fa.up.railway.app/process-image",
+            "https://thesis-webpage-v10-production-c1fa.up.railway.app/process-image",
             json={"image_url": image_url, "user_id": user_id}
         )
         if response.status_code == 200:
