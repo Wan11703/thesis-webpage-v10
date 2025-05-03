@@ -65,7 +65,7 @@ async def process_image(request: Request):
         return JSONResponse(content={"error": "No user_id provided"}, status_code=403)
 
     # Use the proxy route on your Node server
-    image_url = f"https://thesis-webpage-v10-production.up.railway.app/{user_id}"
+    image_url = f"https://thesis-webpage-v10-production.up.railway.app/api/image-proxy/{user_id}"
     # image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
     
 

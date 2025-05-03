@@ -33,8 +33,18 @@
 
       <!-- esn-start | camera -->
 
-      <button class="camera-btn" onclick="openCamera()">Open Camera</button>
-      <input type="file" accept="image/*" capture="environment" id="mobile-camera-input" style="display: none;" onchange="handleMobileCapture(event)" />
+      <!-- <button class="camera-btn" onclick="openCamera()">Open Camera</button>
+      <input type="file" accept="image/*" capture="environment" id="mobile-camera-input" style="display: none;" onchange="handleMobileCapture(event)" /> -->
+
+      <input 
+  type="file" 
+  accept="image/*" 
+  capture="environment" 
+  style="display: none;" 
+  id="mobileCameraInput" 
+  onchange="handleMobileCapture(this)"
+>
+<button class="camera-btn" onclick="document.getElementById('mobileCameraInput').click()">Open Camera</button>
 
       <!-- esn-end | camera -->
 
@@ -785,14 +795,37 @@
 
     };
 
-    const handleMobileCapture = (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
+    const handleMobileCapture = async (input) => {
+  const file = input.files[0];
+  if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = () => showPreview(reader.result);
-      reader.readAsDataURL(file);
-    };
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64Image = reader.result;
+
+    try {
+      const response = await fetch("/save-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ image: base64Image })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert("Image saved successfully.");
+      } else {
+        alert("Failed to save image: " + result.message);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("An error occurred while uploading the image.");
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
 
     const showPreview = (dataUrl) => {
       const cameraDiv = document.getElementById("camera-div");
