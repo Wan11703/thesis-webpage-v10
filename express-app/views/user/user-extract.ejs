@@ -829,12 +829,18 @@
     const openCamera = async () => {
       const cameraDiv = document.getElementById("camera-div");
       const cameraContainer = document.getElementById("camera-container");
-      const mobileInput = document.getElementById("mobile-camera-input");
+      const mobileInput = document.getElementById("mobileCameraInput");
+      // const mobileInput = document.getElementById("mobile-camera-input");
 
       if (isMobile()) {
-        mobileInput.click(); // Open native camera
-        return;
-      }
+  if (mobileInput) {
+    mobileInput.click(); // Open native camera
+  } else {
+    console.warn("Mobile input element not found.");
+  }
+  return;
+}
+
 
       cameraDiv.classList.add("active");
       cameraContainer.classList.remove("hide");
