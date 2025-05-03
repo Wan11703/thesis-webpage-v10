@@ -181,9 +181,9 @@
       <div class="modal-buttons">
         <div class="modal-buttons2">
           <button type="button" id="save" onclick="saveData();">Save</button>
-        <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
+          <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
         </div>
-        
+
         <div class="modal-buttons3">
           <button id="back">Back</button>
           <button id="close">Close</button>
@@ -749,6 +749,21 @@
           indications.textContent = data.indication || "No indications available.";
           side_effects.textContent = data.side_effects || "No side effects available.";
           price.textContent = data.price || "No price information available.";
+
+          // stuff
+
+          var modalTitle = document.querySelector("#modal-title");
+          var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
+
+          // Store the extracted values in the global object 'medicineData'
+          medicineData.medicineName = medicineName;
+          medicineData.drug_information = data.drug_information;  // Store the passed data
+          medicineData.interactions = data.interactions;
+          medicineData.indications = data.indications;
+          medicineData.side_effects = data.side_effects;
+          medicineData.price = data.price;
+
+
         }
 
         // Show the modal
@@ -763,21 +778,23 @@
 
     const saveButton = document.getElementById("save");
 
-    function saveData() {
-      var modalTitle = document.querySelector("#modal-title");
-      var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      var drug_information_value = document.querySelector("#drug_information").textContent;
-      var interactions_value = document.querySelector("#interactions").textContent;
-      var indications_value = document.querySelector("#indications").textContent;
-      var side_effects_value = document.querySelector("#side_effects").textContent;
-      var price_value =  document.querySelector("#price").textContent;
+    let medicineData = {};  // Global object to store the text content
 
-const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
+    function saveData() {
+      // var modalTitle = document.querySelector("#modal-title");
+      // var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
+      // var drug_information_value = document.querySelector("#drug_information").textContent;
+      // var interactions_value = document.querySelector("#interactions").textContent;
+      // var indications_value = document.querySelector("#indications").textContent;
+      // var side_effects_value = document.querySelector("#side_effects").textContent;
+      // var price_value = document.querySelector("#price").textContent;
+
+      // const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
 
       fetch('/user/save-history', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(medicineData)
       })
         .then(response => response.json().then(json => {
           if (!response.ok) throw new Error(json.message);
@@ -888,37 +905,37 @@ const data = { medicineName, drug_information_value, interactions_value, indicat
     };
 
     const handleMobileCapture = async (input) => {
-  const file = input.files[0];
-  if (!file) return;
+      const file = input.files[0];
+      if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = async () => {
-    const base64Image = reader.result;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64Image = reader.result;
 
-    try {
-      const response = await fetch("/save-image", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ image: base64Image })
-      });
+        try {
+          const response = await fetch("/save-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ image: base64Image })
+          });
 
-      const result = await response.json();
-      if (response.ok) {
-        showServerMessage("Image saved successfully.");
-        setTimeout(() => location.reload(), 1000); // 🔁 Reload after 1 second
-      } else {
-        showServerMessage("Failed to save image.", false);
-      }
-    } catch (err) {
-      console.error("Upload error:", err);
-      showServerMessage("An error occurred while uploading the image.", false);
-    }
-  };
+          const result = await response.json();
+          if (response.ok) {
+            showServerMessage("Image saved successfully.");
+            setTimeout(() => location.reload(), 1000); // 🔁 Reload after 1 second
+          } else {
+            showServerMessage("Failed to save image.", false);
+          }
+        } catch (err) {
+          console.error("Upload error:", err);
+          showServerMessage("An error occurred while uploading the image.", false);
+        }
+      };
 
-  reader.readAsDataURL(file);
-};
+      reader.readAsDataURL(file);
+    };
 
 
     const showPreview = (dataUrl) => {
@@ -963,28 +980,28 @@ const data = { medicineName, drug_information_value, interactions_value, indicat
     };
 
     const uploadImage = async () => {
-  if (!capturedImageBlob) return showServerMessage("No image to upload.", false);
+      if (!capturedImageBlob) return showServerMessage("No image to upload.", false);
 
-  try {
-    const res = await fetch("/save-image", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: capturedImageBlob })
-    });
+      try {
+        const res = await fetch("/save-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: capturedImageBlob })
+        });
 
-    const result = await res.json();
+        const result = await res.json();
 
-    if (res.ok) {
-      showServerMessage(result.message);
-      setTimeout(() => location.reload(), 1000); // 🔁 Reload after 1 second
-    } else {
-      showServerMessage("Failed to save image.", false);
-    }
-  } catch (err) {
-    console.error("Upload error:", err);
-    showServerMessage("Failed to upload image.", false);
-  }
-};
+        if (res.ok) {
+          showServerMessage(result.message);
+          setTimeout(() => location.reload(), 1000); // 🔁 Reload after 1 second
+        } else {
+          showServerMessage("Failed to save image.", false);
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
+        showServerMessage("Failed to upload image.", false);
+      }
+    };
 
     // esn-end | camera
 
