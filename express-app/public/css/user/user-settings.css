@@ -469,6 +469,7 @@ form button {
 @media (max-width: 360px) {
     .modal{
         padding: 10px;
+        height: 650px;
     }
 
     .tab-container2{
@@ -476,7 +477,7 @@ form button {
     }
 
     .content-box2 .content2.active{
-        height: 230px;
+        height: 270px;
     }
 }
 

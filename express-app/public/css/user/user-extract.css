@@ -725,6 +725,7 @@ form button,
 @media (max-width: 360px) {
     .modal{
         padding: 10px;
+        height: 600px;
     }
 
     #close,
@@ -739,6 +740,6 @@ form button,
     }
 
     .content-box .content.active{
-        height: 230px;
+        height: 270px;
     }
 }
