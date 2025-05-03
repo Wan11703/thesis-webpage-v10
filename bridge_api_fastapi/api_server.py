@@ -19,19 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global variable to store the latest extracted medicines
-latest_extracted_medicines = []
 
-# Endpoint to serve extracted medicine names
-@app.get("/api/extracted-medicines")
-def get_extracted_medicines():
-    json_file_path = 'C:/Users/Mark/OneDrive/Desktop/thesis-webpage/ocr/extracted_medicines.json'
-    if os.path.exists(json_file_path):
-        with open(json_file_path, 'r') as file:
-            extracted_medicines = json.load(file)
-        return JSONResponse(content={"medicineArray": extracted_medicines})
-    else:
-        return JSONResponse(content={"medicineArray": []}, status_code=404)
 
 # SSE endpoint to stream updates to the frontend
 @app.get("/api/stream-medicines")
@@ -79,8 +67,6 @@ async def process_image(request: Request):
     # Use the proxy route on your Node server
     image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
 
-
-
     try:
         # Forward the proxy URL to googleVision.py
         response = requests.post(
@@ -95,10 +81,6 @@ async def process_image(request: Request):
             return JSONResponse(content={"error": "Failed to process the image in googleVision.py"}, status_code=500)
     except requests.exceptions.RequestException as e:
         return JSONResponse(content={"error": f"Error communicating with googleVision.py: {str(e)}"}, status_code=500)
-
-
-
-
 
 
 if __name__ == "__main__":

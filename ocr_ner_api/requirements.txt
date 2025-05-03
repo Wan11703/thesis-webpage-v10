@@ -1,0 +1,13 @@
+fastapi==0.115.12
+Flask==3.1.0
+mysql_connector_repackaged==0.3.1
+numpy==2.2.5
+openai==0.28.0
+pandas==2.2.3
+Pillow==11.2.1
+python-dotenv==1.1.0
+rapidfuzz==3.13.0
+Requests==2.32.3
+torch==2.5.1+cu121
+transformers==4.48.3
+uvicorn==0.34.2
