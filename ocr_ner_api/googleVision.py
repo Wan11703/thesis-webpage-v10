@@ -42,7 +42,7 @@ app = FastAPI(title="OCR and NER API", version="1.0.0")
     # Prepare the database connection details
 def get_image_from_db(user_id):
     """Fetches the image from the database for the given user_id."""
-    conn = mysql.connector.connect(**DB_CONFIG)
+    conn = mysql.connector.connect(**DB_URL)
     cursor = conn.cursor()
     cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
     row = cursor.fetchone()

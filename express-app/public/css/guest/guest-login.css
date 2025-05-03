@@ -5,7 +5,7 @@
 }
 
 #form {
-    margin: 100px 0;
+    margin: 50px 0;
     width: 400px;
     padding: 20px;
     background-color: whitesmoke;
@@ -127,4 +127,16 @@ button {
 #modal-title{
     font-size: 28px;
     align-self: center;
+}
+
+/* links */
+
+.links{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.links a{
+    color: blue;
 }

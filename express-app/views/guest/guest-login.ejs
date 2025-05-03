@@ -17,14 +17,23 @@
                 <h1><a href="#">MedExtract</a></h1>
             </div>
 
-            <ul class="nav">
+            <div class="menu-toggle" id="menu-toggle">&#9776;</div> <!-- Burger icon -->
+
+            <ul class="nav" id="guest-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/html/guest/guest-about.html">About</a></li>
                 <li><a href="/guest-login">Login</a></li>
                 <li><a href="/guest-register">Register</a></li>
             </ul>
+
         </div>
     </nav>
+
+    <div class="message-container">
+        <div class="container">
+            <div class="server-message">SERVER MESSAGE WILL SHOW HERE</div>
+        </div>
+    </div>
 
     <section class="login">
         <div class="container">
@@ -43,19 +52,20 @@
                         <label for="show-password1">Show Password</label>
                         <input type="checkbox" id="show-password1" class="show-password" />
                     </div>
-                    <button type="submit">Login</button>
+
+
+                    <div class="links">
+                        <a href="/guest-recovery">Forgot Password?</a>
+                        <a href="/guest-register">Create Account</a>
+                    </div>
+                </div>
+                <button type="submit">Login</button>
+
 
             </form>
         </div>
     </section>
 
-    <div id="modal_container" class="modal-container">
-        <div class="modal">
-            <h1 id="modal-title"></h1>
-
-            <button id="close">Close</button>
-        </div>
-    </div>
 
     <footer class="footer">
         <div class="container">
@@ -114,12 +124,12 @@
 
             validateInputs();
 
-            // Check for errors before sending data
             const errors = document.querySelectorAll(".error");
             const hasErrors = Array.from(errors).some((error) => error.innerText !== "");
 
             if (!hasErrors) {
                 const formData = new FormData(form);
+
                 fetch("/login", {
                     method: "POST",
                     body: formData,
@@ -127,21 +137,19 @@
                     .then(async (res) => {
                         const message = await res.text();
                         if (!res.ok) throw new Error(message);
-                        // Redirect or show modal
-                        modalTitle.textContent = "Login successful!";
-                        modal_container.classList.add("show");
-                        // You can redirect after a delay
+
+                        showServerMessage(message); // ✅ success
+
                         setTimeout(() => {
                             window.location.href = "/user-extract";
                         }, 1500);
                     })
                     .catch((err) => {
-                        modalTitle.textContent = err.message;
-                        modal_container.classList.add("show");
+                        showServerMessage(err.message, false); // ❌ error
                     });
             }
-
         });
+
 
 
 
@@ -203,14 +211,31 @@
             }
         };
 
-        // modal
 
-        const modal_container = document.getElementById("modal_container");
-        const modalTitle = document.getElementById("modal-title");
-        const close = document.getElementById("close");
+        // server message
 
-        close.addEventListener('click', () => {
-            modal_container.classList.remove('show');
+        serverMessage = document.querySelector(".server-message");
+        serverMessageContainer = document.querySelector(".message-container .container");
+
+        function showServerMessage(message, isSuccess = true) {
+            serverMessage.innerHTML = message;
+            serverMessage.style.cssText = isSuccess
+                ? "background-color: #D4EDDA; color: #1B5E20;"
+                : "background-color: #F8D7DA; color: #B71C1C;";
+            serverMessage.classList.add("active");
+            serverMessageContainer.classList.add("active");
+
+            setTimeout(() => {
+                serverMessage.classList.remove("active");
+                serverMessageContainer.classList.remove("active");
+            }, 4000);
+        }
+
+        const toggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('guest-nav');
+
+        toggle.addEventListener('click', () => {
+            nav.classList.toggle('show');
         });
 
     </script>
