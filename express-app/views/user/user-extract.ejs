@@ -398,7 +398,7 @@
       progress.style.width = "0px"; // Reset progress bar width
       loading = setInterval(animate, 100); // Start the animation
 
-      const imageUrl = "http://localhost:3000/api/image-proxy/{user_id}";
+      const imageUrl = "http://localhost:3000/api/image-proxy/{user_id}"; // FRONT-END URL
       console.log("Image URL:", imageUrl); console.log("User ID:", userId);
 
       console.log("Image URL:", imageUrl); // Log the image URL
@@ -407,7 +407,7 @@
       // fetchExtractedMedicines();
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/process-image", {
+        const response = await fetch("http://127.0.0.1:8000/api/process-image", {  // API_SERVER
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -531,7 +531,7 @@
     // Fetch the extracted medicine names from the FastAPI endpoint
     async function fetchExtractedMedicines() {
       try {
-        const response = await fetch("http://127.0.0.1:8001/process-image", {
+        const response = await fetch("http://0.0.0.0:8080/process-image", { // GOOGLE_VISION API
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -561,7 +561,7 @@
 
     async function sendRawTextToBackend(rawText) {
       try {
-        const response = await fetch("http://127.0.0.1:5000/process-raw-text", { // Update URL as needed
+        const response = await fetch("http://127.0.0.1:5000/process-raw-text", { // Update URL as needed SEARCH -API
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -614,7 +614,7 @@
     }
 
     // Listen for real-time updates using SSE
-    const eventSource = new EventSource("http://127.0.0.1:8000/api/stream-medicines");
+    const eventSource = new EventSource("http://127.0.0.1:8000/api/stream-medicines"); // API_SERVER
 
     eventSource.onmessage = (event) => {
       const medicines = JSON.parse(event.data);
@@ -654,7 +654,7 @@
 
       // Fetch drug information from the API
       try {
-        const response = await fetch("http://127.0.0.1:5000/get-drug-info", {
+        const response = await fetch("http://127.0.0.1:5000/get-drug-info", { // SEARCH API
           method: "POST",
           headers: {
             "Content-Type": "application/json",

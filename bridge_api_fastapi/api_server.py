@@ -13,13 +13,11 @@ app = FastAPI()
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Replace with your frontend's URL
+    allow_origins=["thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 
 # SSE endpoint to stream updates to the frontend
 @app.get("/api/stream-medicines")
@@ -65,12 +63,14 @@ async def process_image(request: Request):
         return JSONResponse(content={"error": "No user_id provided"}, status_code=403)
 
     # Use the proxy route on your Node server
-    image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
+    image_url = f"https://thesis-webpage-v10-production.up.railway.app/{user_id}"
+    # image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
+    
 
     try:
         # Forward the proxy URL to googleVision.py
         response = requests.post(
-            "http://127.0.0.1:8001/process-image",
+            "http://0.0.0.0:8080/process-image",
             json={"image_url": image_url, "user_id": user_id}
         )
         if response.status_code == 200:
@@ -83,7 +83,7 @@ async def process_image(request: Request):
         return JSONResponse(content={"error": f"Error communicating with googleVision.py: {str(e)}"}, status_code=500)
 
 
-if __name__ == "__main__":
-    import uvicorn
-    # Run the FastAPI app
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     # Run the FastAPI app
+#     uvicorn.run(app, host="127.0.0.1", port=8000)
