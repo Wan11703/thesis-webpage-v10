@@ -196,14 +196,13 @@
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
       var medicineName = modalTitle.textContent.slice(17);
-      const drug_information = document.querySelector("#drug_information").textContent;
-      const interactions = document.querySelector("#interactions").textContent;
-      const indications = document.querySelector("#indications").textContent;
-      const side_effects = document.querySelector("#side_effects").textContent;
-      const price = document.querySelector("#price").textContent;
-      
+      const details = document.getElementById("drug_information").textContent;
+      const interactions = document.getElementById("interactions").textContent;
+      const guidelines = document.getElementById("indications").textContent;
+      const effects = document.getElementById("side_effects").textContent;
+      const prices = document.getElementById("price").textContent;
 
-      const data = { medicineName, drug_information, interactions, indications, side_effects, price };
+      const data = { medicineName, details, interactions, guidelines, effects, prices };
 
       // Fetch to send data to backend
       fetch('/user/save-history', {
