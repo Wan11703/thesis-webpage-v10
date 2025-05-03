@@ -151,28 +151,23 @@
             </div>
             <div class="content-box">
               <div class="content active" id="drug_information">
-                <p>
-                </p>
+
               </div>
 
               <div class="content" id="interactions">
-                <p>
-                </p>
+
               </div>
 
               <div class="content" id="indications">
-                <p>
-                </p>
+
               </div>
 
               <div class="content" id="side_effects">
-                <p>
-                </p>
+
               </div>
 
               <div class="content" id="price">
-                <p>
-                </p>
+
               </div>
             </div>
           </div>
@@ -768,11 +763,11 @@
     function saveData() {
       var modalTitle = document.querySelector("#modal-title");
       var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      var drug_information_value = document.querySelector("#drug_information").textContent;
-      var interactions_value = document.querySelector("#interactions").textContent;
-      var indications_value = document.querySelector("#indications").textContent;
-      var side_effects_value = document.querySelector("#side_effects").textContent;
-      var price_value =  document.querySelector("#price").textContent;
+      var drug_information_value = document.getElementById("drug_information").textContent;
+      var interactions_value = document.getElementById("interactions").textContent;
+      var indications_value = document.getElementById("indications").textContent;
+      var side_effects_value = document.getElementById("side_effects").textContent;
+      var price_value =  document.getElementById("price").textContent;
 
 const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
 
