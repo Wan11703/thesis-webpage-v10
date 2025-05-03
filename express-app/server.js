@@ -157,7 +157,7 @@ app.get("/user-extract", (req, res) => {
             // Check if the image column is empty
             const images = results.filter((result) => result.image); // Only include rows with non-empty images
 
-            res.render("user/user-extract", { images,  userId: userId });
+            res.render("user/user-extract", { images,  userId: userId, username: req.session.user.username });
         }
     );
 
