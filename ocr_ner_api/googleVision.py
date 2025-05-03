@@ -333,6 +333,3 @@ def save_extracted_medicines_to_json(extracted_medicine_names):
     except requests.exceptions.RequestException as e:
         print(f"Error notifying the API server: {e}")
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8001)
