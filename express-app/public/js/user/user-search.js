@@ -67,6 +67,7 @@ const interactions = document.querySelector("#interactions");
 const indications = document.querySelector("#indications");
 const side_effects = document.querySelector("#side_effects");
 const price = document.querySelector("#price");
+const saveBtn = document.querySelector("#save");
 
 
 
