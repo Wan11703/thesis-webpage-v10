@@ -30,12 +30,44 @@
     <div class="header">
       <h2>Upload Image Here To Scan</h2>
       <div class="server-message"></div>
+
+      <!-- esn-start | camera -->
+
+      <button class="camera-btn" onclick="openCamera()">Open Camera</button>
+      <input type="file" accept="image/*" capture="environment" id="mobile-camera-input" style="display: none;" onchange="handleMobileCapture(event)" />
+
+      <!-- esn-end | camera -->
+
     </div>
 
     <div class="input-div">
       <p>Drag and Drop Images or <span class="browse">Browse</span></p>
       <input type="file" class="file" accept="image/png, image/jpeg, image/jpg" />
     </div>
+
+    <!-- esn-start | camera -->
+
+    <div class="camera-div" id="camera-div">
+      <div class="container">
+        <div class="camera-container" id="camera-container">
+          <video class="camera-video" id="camera-video" width="400" height="300" autoplay></video>
+          <button class="camera-btn" onclick="captureImage()">Capture Image</button>
+          <button class="camera-btn" onclick="closeCamera()">Close Camera</button>
+        </div>
+    
+        <div class="camera-modal" id="camera-modal">
+          <div class="camera-modal-content">
+            <img class="camera-preview-image" id="camera-preview-image" src="" alt="Captured Image" />
+            <div class="camera-buttons">
+              <button class="camera-save-btn" onclick="uploadImage()">Upload</button>
+              <button class="camera-cancel-btn" onclick="cancelUpload()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- esn-end | camera -->
 
     <div class="image-divs">
       <form id="queued-form">
@@ -692,6 +724,137 @@
         alert("Failed to retrieve drug information. Please try again.");
       }
     }
+
+    
+    // esn-start | camera
+
+    const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let capturedImageBlob = null;
+
+    const openCamera = async () => {
+      const cameraDiv = document.getElementById("camera-div");
+      const cameraContainer = document.getElementById("camera-container");
+      const mobileInput = document.getElementById("mobile-camera-input");
+
+      if (isMobile()) {
+        mobileInput.click(); // Open native camera
+        return;
+      }
+
+      cameraDiv.classList.add("active");
+      cameraContainer.classList.remove("hide");
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const cameraVideo = document.getElementById("camera-video");
+        cameraVideo.srcObject = stream;
+      } catch (err) {
+        alert("Camera not supported or permission denied.");
+      }
+    };
+
+    const captureImage = () => {
+      const video = document.getElementById("camera-video");
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      showPreview(dataUrl);
+    };
+
+    const closeCamera = () => {
+      const cameraDiv = document.getElementById("camera-div");
+      const cameraModal = document.getElementById("camera-modal");
+      const cameraContainer = document.getElementById("camera-container");
+      const cameraVideo = document.getElementById("camera-video");
+
+      // Stop the camera stream if active
+      const stream = cameraVideo.srcObject;
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        cameraVideo.srcObject = null;
+      }
+
+      // Hide everything
+      cameraDiv.classList.remove("active");
+      cameraModal.classList.remove("active");
+      cameraContainer.classList.add("hide");
+
+
+    };
+
+    const handleMobileCapture = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => showPreview(reader.result);
+      reader.readAsDataURL(file);
+    };
+
+    const showPreview = (dataUrl) => {
+      const cameraDiv = document.getElementById("camera-div");
+      const cameraContainer = document.getElementById("camera-container");
+      const cameraModal = document.getElementById("camera-modal");
+      const previewImage = document.getElementById("camera-preview-image");
+
+      previewImage.src = dataUrl;
+      cameraContainer.classList.add("hide");
+      cameraModal.classList.add("active");
+
+      capturedImageBlob = dataUrl;
+    };
+
+    const cancelUpload = () => {
+      const cameraDiv = document.getElementById("camera-div");
+      const cameraModal = document.getElementById("camera-modal");
+      const cameraContainer = document.getElementById("camera-container");
+      const cameraVideo = document.getElementById("camera-video");
+
+      // Always hide the preview modal
+      cameraModal.classList.remove("active");
+
+      if (isMobile()) {
+        // On mobile, just close completely
+        closeCamera();
+      } else {
+        // On desktop, reopen the camera container and resume stream
+        cameraContainer.classList.remove("hide");
+
+        // Restart camera if it was stopped
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => {
+            cameraVideo.srcObject = stream;
+          })
+          .catch(() => {
+            alert("Unable to access camera.");
+            closeCamera();
+          });
+      }
+    };
+
+    const uploadImage = async () => {
+      if (!capturedImageBlob) return alert("No image to upload.");
+
+      try {
+        const res = await fetch("/save-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: capturedImageBlob })
+        });
+
+        const result = await res.json();
+        alert(result.message);
+        cancelUpload();
+      } catch (err) {
+        console.error("Upload error:", err);
+        alert("Failed to upload image.");
+      }
+    };
+
+    // esn-end | camera
 
 
 

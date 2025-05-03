@@ -576,6 +576,47 @@ function saveUserInDB(userData, res) {
     });
 }
 
+// esn-start | camera
+
+app.post("/save-image", async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { image } = req.body;
+
+    // ✅ 1. Validate base64 format
+    if (!image || !image.startsWith("data:image")) {
+        return res.status(400).json({ message: "Invalid image data" });
+    }
+
+    // ✅ 2. Extract MIME type from base64 string
+    const matches = image.match(/^data:(image\/\w+);base64,/);
+    const imageType = matches ? matches[1] : "image/png"; // Default to PNG if regex fails
+
+    // ✅ 3. Decode base64 into buffer
+    const imageBuffer = Buffer.from(image.split(',')[1], 'base64');
+
+    const userId = req.session.user.id;
+
+    try {
+        const updateQuery = "UPDATE user_tbl SET image = ?, image_type = ? WHERE user_id = ?";
+        dbConnection.query(updateQuery, [imageBuffer, imageType, userId], (err) => {
+            if (err) {
+                console.error("Error saving image:", err);
+                return res.status(500).json({ message: "Error saving image" });
+            }
+
+            res.status(200).json({ message: "Image updated successfully" });
+        });
+    } catch (err) {
+        console.error("Error processing image:", err);
+        res.status(500).json({ message: "Error processing image" });
+    }
+});
+
+// esn-end | camera
+
 
 
 
