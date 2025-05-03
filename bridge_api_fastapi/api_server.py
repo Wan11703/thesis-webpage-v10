@@ -13,7 +13,9 @@ app = FastAPI()
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
+    allow_origins=["https://thesis-webpage-v10-production.up.railway.app",
+                   "https://thesis-webpage-v10-production-775f.up.railway.app",
+                   "https://thesis-webpage-v10-production-c1fa.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
