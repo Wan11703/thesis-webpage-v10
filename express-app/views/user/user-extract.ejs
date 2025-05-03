@@ -16,7 +16,11 @@
         <h1><a href="#">MedExtract</a></h1>
       </div>
 
-      <ul class="nav">
+      <div class="menu-toggle" id="user-menu-toggle">&#9776;</div> <!-- Unique ID -->
+
+      <ul class="nav" id="user-nav">
+        <li class="username-holder">Hey there! <%= username %>
+        </li>
         <li><a href="/user-extract">Extract</a></li>
         <li><a href="/user-search">Search</a></li>
         <li><a href="/user-settings">Settings</a></li>
@@ -25,18 +29,24 @@
     </div>
   </nav>
 
+  <div class="message-container">
+    <div class="container">
+      <div class="server-message">SERVER MESSAGE WILL SHOW HERE</div>
+    </div>
+  </div>
+
   <main class="app">
 
     <div class="header">
       <h2>Upload Image Here To Scan</h2>
-      <div class="server-message"></div>
+      <!-- <div class="server-message"></div> -->
 
       <!-- esn-start | camera -->
 
       <!-- <button class="camera-btn" onclick="openCamera()">Open Camera</button>
       <input type="file" accept="image/*" capture="environment" id="mobile-camera-input" style="display: none;" onchange="handleMobileCapture(event)" /> -->
 
-      <input 
+      <!-- <input 
   type="file" 
   accept="image/*" 
   capture="environment" 
@@ -44,7 +54,11 @@
   id="mobileCameraInput" 
   onchange="handleMobileCapture(this)"
 >
-<button class="camera-btn" onclick="document.getElementById('mobileCameraInput').click()">Open Camera</button>
+<button class="camera-btn" onclick="document.getElementById('mobileCameraInput').click()">Open Camera</button>-->
+
+      <input type="file" accept="image/*" capture="environment" style="display: none;" id="mobileCameraInput"
+        onchange="handleMobileCapture(this)">
+      <button class="camera-btn" onclick="document.getElementById('mobileCameraInput').click()">Open Camera</button>
 
       <!-- esn-end | camera -->
 
@@ -64,7 +78,7 @@
           <button class="camera-btn" onclick="captureImage()">Capture Image</button>
           <button class="camera-btn" onclick="closeCamera()">Close Camera</button>
         </div>
-    
+
         <div class="camera-modal" id="camera-modal">
           <div class="camera-modal-content">
             <img class="camera-preview-image" id="camera-preview-image" src="" alt="Captured Image" />
@@ -165,6 +179,8 @@
         </div>
       </div>
       <div class="modal-buttons">
+        <button type="button" id="save" onclick="saveData();">Save</button>
+        <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
         <button id="back">Back</button>
         <button id="close">Close</button>
       </div>
@@ -227,8 +243,10 @@
     queuedDiv = document.querySelector(".queued-div");
     inputDiv = document.querySelector(".input-div");
     input = document.querySelector(".input-div input");
+
     serverMessage = document.querySelector(".server-message");
-    savedImages = JSON.parse('<%- JSON.stringify(images) %>');
+    serverMessageContainer = document.querySelector(".message-container .container");
+    serverMessageModal = document.querySelector(".server-message-modal");
 
     deleteImages = [];
 
@@ -287,14 +305,12 @@
         .then(response => {
           if (response.status !== 200) throw Error(response.statusText)
           deleteImages = []
-          serverMessage.innerHTML = response.statusText
-          serverMessage.style.cssText = "background-color: #D4EDDA; color: #1B5E20;"
+          showServerMessage("Image deleted successfully!");
           location.reload();
         })
 
         .catch(error => {
-          serverMessage.innerHTML = error
-          serverMessage.style.cssText = "background-color: #F8D7DA; color: #B71C1C;"
+          showServerMessage(error.message, false);
         });
     }
 
@@ -352,12 +368,12 @@
 
         .then(response => {
           if (response.status !== 200) throw Error(response.statusText)
+          showServerMessage("Image uploaded successfully!");
           location.reload()
         })
 
         .catch(error => {
-          serverMessage.innerHTML = error
-          serverMessage.style.cssText = "background-color: #F8D7DA; color: #B71C1C;"
+          showServerMessage(error.message, false);
         });
     }
 
@@ -627,7 +643,7 @@
         }
       } catch (error) {
         console.error("Error sending raw text to backend:", error);
-        alert("An error occurred while sending raw text to the backend.");
+        showServerMessage("An error occurred while sending raw text to the backend.");
       }
     }
 
@@ -648,7 +664,7 @@
         li.onclick = () => {
           openMedicineModal(med);
           selectorDiv.classList.remove("active");
-          
+
         } // Attach modal logic
         ul.appendChild(li);
       });
@@ -690,8 +706,8 @@
       selectorDiv.classList.remove("active");
       modalTitle.textContent = `${medicineName} Medical Insights`;
 
-      
-      
+
+
       console.log("Selected Medicine:", medicineName);
       //userSelectedMedicine = true; // User made a selection
 
@@ -729,14 +745,80 @@
         // Show the modal
         // tabActive.classList.add("active");
 
-       
+
       } catch (error) {
         console.error("Failed to fetch drug information:", error);
-        alert("Failed to retrieve drug information. Please try again.");
+        showServerMessage("Failed to retrieve drug information. Please try again.");
       }
     }
 
-    
+    const saveButton = document.getElementById("save");
+
+    function saveData() {
+      const modalTitle = document.querySelector("#modal-title");
+      const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
+      const details = document.getElementById("details").textContent;
+      const interactions = document.getElementById("interactions").textContent;
+      const guidelines = document.getElementById("guidelines").textContent;
+      const effects = document.getElementById("effects").textContent;
+      const prices = document.getElementById("prices").textContent;
+
+      const data = { medicineName, details, interactions, guidelines, effects, prices };
+
+      fetch('/user/save-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json().then(json => {
+          if (!response.ok) throw new Error(json.message);
+          showServerMessageModal(json.message);
+        }))
+        .catch(error => {
+          console.error('Error:', error);
+          showServerMessageModal(error.message, false);
+        });
+    }
+
+
+
+    function showServerMessage(message, isSuccess = true) {
+      serverMessage.innerHTML = message;
+      serverMessage.style.cssText = isSuccess
+        ? "background-color: #D4EDDA; color: #1B5E20;"
+        : "background-color: #F8D7DA; color: #B71C1C;";
+      serverMessage.classList.add("active");
+      serverMessageContainer.classList.add("active");
+
+      setTimeout(() => {
+        serverMessage.classList.remove("active");
+        serverMessageContainer.classList.remove("active");
+      }, 4000);
+    }
+
+    function showServerMessageModal(message, isSuccess = true) {
+      serverMessageModal.innerHTML = message;
+      serverMessageModal.style.cssText = isSuccess
+        ? "background-color: #D4EDDA; color: #1B5E20;"
+        : "background-color: #F8D7DA; color: #B71C1C;";
+      serverMessageModal.classList.add("active");
+
+
+      setTimeout(() => {
+        serverMessageModal.classList.remove("active");
+      }, 4000);
+    }
+
+    // nav
+
+    const userToggle = document.getElementById('user-menu-toggle');
+    const userNav = document.getElementById('user-nav');
+
+    userToggle.addEventListener('click', () => {
+      userNav.classList.toggle('show');
+    });
+
+
     // esn-start | camera
 
     const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -760,7 +842,7 @@
         const cameraVideo = document.getElementById("camera-video");
         cameraVideo.srcObject = stream;
       } catch (err) {
-        alert("Camera not supported or permission denied.");
+        showServerMessage("Camera not supported or permission denied.", false)
       }
     };
 
@@ -797,36 +879,36 @@
     };
 
     const handleMobileCapture = async (input) => {
-  const file = input.files[0];
-  if (!file) return;
+      const file = input.files[0];
+      if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = async () => {
-    const base64Image = reader.result;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64Image = reader.result;
 
-    try {
-      const response = await fetch("/save-image", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ image: base64Image })
-      });
+        try {
+          const response = await fetch("/save-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ image: base64Image })
+          });
 
-      const result = await response.json();
-      if (response.ok) {
-        alert("Image saved successfully.");
-      } else {
-        alert("Failed to save image: " + result.message);
-      }
-    } catch (err) {
-      console.error("Upload error:", err);
-      alert("An error occurred while uploading the image.");
-    }
-  };
+          const result = await response.json();
+          if (response.ok) {
+            showServerMessage("Image saved successfully.")
+          } else {
+            showServerMessage("Failed to save image.", false)
+          }
+        } catch (err) {
+          console.error("Upload error:", err);
+          showServerMessage("An error occurred while uploading the image.", false);
+        }
+      };
 
-  reader.readAsDataURL(file);
-};
+      reader.readAsDataURL(file);
+    };
 
     const showPreview = (dataUrl) => {
       const cameraDiv = document.getElementById("camera-div");
@@ -863,14 +945,14 @@
             cameraVideo.srcObject = stream;
           })
           .catch(() => {
-            alert("Unable to access camera.");
+            showServerMessage("Unable to access camera.", false);
             closeCamera();
           });
       }
     };
 
     const uploadImage = async () => {
-      if (!capturedImageBlob) return alert("No image to upload.");
+      if (!capturedImageBlob) return showServerMessage("No image to upload.", false);
 
       try {
         const res = await fetch("/save-image", {
@@ -880,11 +962,11 @@
         });
 
         const result = await res.json();
-        alert(result.message);
+        showServerMessage(result.message);
         cancelUpload();
       } catch (err) {
         console.error("Upload error:", err);
-        alert("Failed to upload image.");
+        showServerMessage("Failed to upload image.", false);
       }
     };
 

@@ -370,6 +370,35 @@ const queryAsync = (sql, params) => {
     });
 };
 
+app.post("/user/save-history", async (req, res) => {
+    try {
+      const { medicineName, details, interactions, guidelines, effects, prices } = req.body;
+      const historyArray = [medicineName, details, interactions, guidelines, effects, prices];
+      const historySave = JSON.stringify(historyArray);
+      const historyDatetime = new Date();
+      const userId = req.session.user?.id;
+  
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+  
+      const existingHistory = await queryAsync("SELECT * FROM user_history_tbl WHERE user_id = ?", [userId]);
+  
+      if (existingHistory.length > 0) {
+        const sqlUpdate = "UPDATE user_history_tbl SET history_save = ?, history_datetime = ? WHERE user_id = ?";
+        await queryAsync(sqlUpdate, [historySave, historyDatetime, userId]);
+      } else {
+        const sqlInsert = "INSERT INTO user_history_tbl (user_id, history_save, history_datetime) VALUES (?, ?, ?)";
+        await queryAsync(sqlInsert, [userId, historySave, historyDatetime]);
+      }
+  
+      res.status(200).json({ message: "History saved successfully" });
+    } catch (error) {
+      console.error("Error saving history:", error);
+      res.status(500).json({ message: error.message || "Internal Server Error" });
+    }
+  });
+
 
 app.get("/user/get-history", async (req, res) => {
     try {
