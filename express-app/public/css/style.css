@@ -190,6 +190,7 @@ h6 {
   padding: 8px;
   border-radius: 5px;
   border: 2px solid black;
+  text-align: center;
   display: none;
 }
 
@@ -200,6 +201,7 @@ h6 {
   border: 2px solid black;
   display: none;
   align-self: center;
+  text-align: center;
   margin: 0px 10px;
 
 }

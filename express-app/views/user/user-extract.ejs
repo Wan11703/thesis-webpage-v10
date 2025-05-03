@@ -179,9 +179,12 @@
         </div>
       </div>
       <div class="modal-buttons">
-        <button type="button" id="save" onclick="saveData();">Save</button>
-        <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
         <div class="modal-buttons2">
+          <button type="button" id="save" onclick="saveData();">Save</button>
+        <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
+        </div>
+        
+        <div class="modal-buttons3">
           <button id="back">Back</button>
           <button id="close">Close</button>
         </div>
@@ -763,11 +766,11 @@
     function saveData() {
       var modalTitle = document.querySelector("#modal-title");
       var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      var drug_information_value = drug_information.textContent;
-      var interactions_value = interactions.textContent;
-      var indications_value = indications.textContent;
-      var side_effects_value = side_effects.textContent;
-      var price_value =  price.textContent;
+      var drug_information_value = document.querySelector("#drug_information p").textContent;
+      var interactions_value = document.querySelector("#interactions p").textContent;
+      var indications_value = document.querySelector("#indications p").textContent;
+      var side_effects_value = document.querySelector("#side_effects p").textContent;
+      var price_value =  document.querySelector("#price p").textContent;
 
 const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
 
