@@ -125,6 +125,7 @@ close.addEventListener('click', () => {
 
     loaderActive.classList.add("active");
     tabActive.classList.remove("active");
+    saveBtn.classList.remove("active");
 });
 
 // progress bar
@@ -142,6 +143,7 @@ function animate() {
     text.classList.remove("text-blink");
     loaderActive.classList.remove("active");
     tabActive.classList.add("active");
+    saveBtn.classList.add("active");
   } else {
     text.classList.add("text-blink");
     per = per + 6;
