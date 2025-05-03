@@ -761,15 +761,24 @@
     const saveButton = document.getElementById("save");
 
     function saveData() {
-      var modalTitle = document.querySelector("#modal-title");
-      var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      var drug_information_value = document.getElementById("drug_information").textContent;
-      var interactions_value = document.getElementById("interactions").textContent;
-      var indications_value = document.getElementById("indications").textContent;
-      var side_effects_value = document.getElementById("side_effects").textContent;
-      var price_value =  document.getElementById("price").textContent;
+      // var modalTitle = document.querySelector("#modal-title");
+      // var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
+      // var drug_information_value = document.getElementById("drug_information").textContent;
+      // var interactions_value = document.getElementById("interactions").textContent;
+      // var indications_value = document.getElementById("indications").textContent;
+      // var side_effects_value = document.getElementById("side_effects").textContent;
+      // var price_value =  document.getElementById("price").textContent;
 
-const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
+      const modalTitle = document.querySelector("#modal-title");
+      const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
+      const details = document.getElementById("drug_information").textContent;
+      const interactions = document.getElementById("interactions").textContent;
+      const guidelines = document.getElementById("indications").textContent;
+      const effects = document.getElementById("side_effects").textContent;
+      const prices = document.getElementById("price").textContent;
+
+      const data = { medicineName, details, interactions, guidelines, effects, prices };
+
 
       fetch('/user/save-history', {
         method: 'POST',
