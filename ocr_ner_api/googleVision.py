@@ -28,6 +28,7 @@ AZURE_ENDPOINT = os.getenv('AZURE_ENDPOINT')
 AZURE_API_KEY = os.getenv('AZURE_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # Get the DB_URL from environment variables
+
 DB_URL = os.getenv('DB_URL')  # DB_URL should be in the format: mysql://user:password@host:port/database
 
 
@@ -38,11 +39,28 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 app = FastAPI(title="OCR and NER API", version="1.0.0")
-    
-    # Prepare the database connection details
+
 def get_image_from_db(user_id):
     """Fetches the image from the database for the given user_id."""
-    conn = mysql.connector.connect(**DB_URL)
+    
+    # Parse the DB_URL
+result = urlparse(DB_URL)
+    
+# Prepare the database connection details
+db_config = {
+    'user': result.username,
+    'password': result.password,
+    'host': result.hostname,
+    'port': result.port,
+    'database': result.path[1:],  # Remove the leading '/' from the path (database name)
+    'charset': 'utf8mb4'
+        
+}
+
+        # Prepare the database connection details
+def get_image_from_db(user_id):
+    """Fetches the image from the database for the given user_id."""
+    conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
     cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
     row = cursor.fetchone()
