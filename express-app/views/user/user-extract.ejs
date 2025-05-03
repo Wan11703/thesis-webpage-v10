@@ -769,7 +769,7 @@
       var side_effects_value = side_effects.textContent;
       var price_value =  price.textContent;
 
-const data = { medicineName, drug_information, interactions, indications, side_effects, price };
+const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
 
       fetch('/user/save-history', {
         method: 'POST',
