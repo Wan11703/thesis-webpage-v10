@@ -27,7 +27,7 @@ from io import BytesIO
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-app = FastAPI()
+app = FastAPI(title="OCR and NER API", version="1.0.0")
 
 def get_image_from_db(user_id):
     """Fetches the image from the database for the given user_id."""
@@ -46,7 +46,7 @@ def get_image_from_db(user_id):
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Replace with your frontend's URL
+    allow_origins=["thesis-webpage-v10-production.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
