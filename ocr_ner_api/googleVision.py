@@ -52,14 +52,14 @@ def get_image_from_db(user_id):
         'host': result.hostname,
         'port': result.port,
         'database': result.path[1:],  # Remove the leading '/' from the path (database name)
-        'charset': 'utf8mb4'
+        'charset': 'utf8mb4'  # Explicitly set the character set
     }
 
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
 
-        # Explicitly set the character set to utf8mb4
+        # Explicitly set the character set for the session
         cursor.execute("SET NAMES utf8mb4;")
 
         # Execute the query to fetch the image
@@ -75,6 +75,28 @@ def get_image_from_db(user_id):
     except mysql.connector.Error as e:
         print(f"Database error: {e}")
         return None, None
+
+def test_db_connection():
+    """Test the database connection and character set."""
+    result = urlparse(DB_URL)
+    db_config = {
+        'user': result.username,
+        'password': result.password,
+        'host': result.hostname,
+        'port': result.port,
+        'database': result.path[1:],
+        'charset': 'utf8mb4'
+    }
+
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("SHOW VARIABLES LIKE 'character_set%';")
+        print("Character Set Variables:", cursor.fetchall())
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as e:
+        print(f"Database connection test failed: {e}")
 
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
