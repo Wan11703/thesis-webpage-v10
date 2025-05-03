@@ -128,9 +128,9 @@
           <div class="loading">
             <div class="text">Generating medical insight... Please wait.</div>
             <!-- <div class="percent"> 100%</div> -->
-            <div class="progress-bar">
+            <!-- <div class="progress-bar">
               <div class="progress"></div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@
               <button class="tab-btn">Dosage Guidelines</button>
               <button class="tab-btn">Side Effects</button>
               <button class="tab-btn">Drug Prices</button>
-              <div class="line"></div>
+              <!-- <div class="line"></div> -->
             </div>
             <div class="content-box">
               <div class="content active" id="drug_information">
@@ -457,7 +457,7 @@
       // Reset progress bar and start animation
       count = 0;
       per = 0;
-      progress.style.width = "0px"; // Reset progress bar width
+      // progress.style.width = "0px"; // Reset progress bar width
       loading = setInterval(animate, 100); // Start the animation
 
       const imageUrl = `https://thesis-webpage-v10-production.up.railway.app/api/image-proxy/${userId}`; // FRONT-END URL
@@ -500,7 +500,7 @@
       clearInterval(loading); // Stop the interval
       count = 0;
       per = 0;
-      progress.style.width = "0px";
+      // progress.style.width = "0px";
 
       loaderActive.classList.remove("active");
       tabActive.classList.remove("active");
@@ -520,7 +520,7 @@
       clearInterval(loading); // Stop the interval
       count = 0;
       per = 0;
-      progress.style.width = "0px"; // Reset progress bar width
+      // progress.style.width = "0px"; // Reset progress bar width
 
       loaderActive.classList.add("active");
       tabActive.classList.remove("active");
@@ -532,7 +532,7 @@
 
     // progress bar
 
-    var progress = document.querySelector(".progress");
+    // var progress = document.querySelector(".progress");
     var text = document.querySelector(".text");
 
     var count = 0; // Start at 0%
@@ -557,7 +557,7 @@
         text.classList.add("text-blink");
         per = per + 6;
         count = count + 1;
-        progress.style.width = per + "px";
+        // progress.style.width = per + "px";
       }
     }
 
@@ -576,7 +576,7 @@
         text.classList.add("text-blink");
         per = per + 6;
         count = count + 1;
-        progress.style.width = per + "px";
+        // progress.style.width = per + "px";
       }
     }
 
@@ -698,12 +698,12 @@
       clearInterval(loading); // Stop the interval
       count = 0;
       per = 0;
-      progress.style.width = "0px"; // Reset progress bar width
+      // progress.style.width = "0px"; // Reset progress bar width
 
       // Reset progress bar and start animation
       count = 0;
       per = 0;
-      progress.style.width = "0px"; // Reset progress bar width
+      // progress.style.width = "0px"; // Reset progress bar width
       loading = setInterval(animate2, 100); // Start the animation
       loaderActive.classList.add("active");
 
@@ -761,13 +761,13 @@
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
       const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      const details = document.getElementById("details").textContent;
-      const interactions = document.getElementById("interactions").textContent;
-      const guidelines = document.getElementById("guidelines").textContent;
-      const effects = document.getElementById("effects").textContent;
-      const prices = document.getElementById("prices").textContent;
+      const drug_information = document.querySelector("#drug_information");
+          const interactions = document.querySelector("#interactions");
+const indications = document.querySelector("#indications");
+const side_effects = document.querySelector("#side_effects");
+const price = document.querySelector("#price");
 
-      const data = { medicineName, details, interactions, guidelines, effects, prices };
+const data = { medicineName, drug_information, interactions, indications, side_effects, price };
 
       fetch('/user/save-history', {
         method: 'POST',

@@ -243,6 +243,7 @@ form button,
     /* border-bottom: 2px solid rgba(229, 229, 229); */
     border-bottom: 2px solid black;
     position: relative;
+    overflow-x: auto;
 }
 
 .tab-box .tab-btn {

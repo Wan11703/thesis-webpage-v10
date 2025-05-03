@@ -95,8 +95,18 @@ app.get("/guest-register", (req, res) => {
 
 // user
 
+// app.get("/user-search", (req, res) => {
+//     res.render("user/user-search");
+// });
+
 app.get("/user-search", (req, res) => {
-    res.render("user/user-search");
+    if (!req.session.user) {
+        return res.redirect("/guest-login");
+    }
+
+    res.render("user/user-search", {
+        username: req.session.user.username
+    });
 });
 
 app.get("/user-settings", (req, res) => {
