@@ -761,13 +761,13 @@
     const saveButton = document.getElementById("save");
 
     function saveData() {
-      const modalTitle = document.querySelector("#modal-title");
-      const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      const drug_information_value = drug_information.innerHTML;
-      const interactions_value = interactions.innerHTML;
-      const indications_value = indications.innerHTML;
-      const side_effects_value = side_effects.innerHTML;
-      const price_value =  price.innerHTML;
+      var modalTitle = document.querySelector("#modal-title");
+      var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
+      var drug_information_value = drug_information.textContent;
+      var interactions_value = interactions.textContent;
+      var indications_value = indications.textContent;
+      var side_effects_value = side_effects.textContent;
+      var price_value =  price.textContent;
 
 const data = { medicineName, drug_information, interactions, indications, side_effects, price };
 
