@@ -73,7 +73,7 @@ from app2 import extract_drug_names
 openai.api_key = OPENAI_API_KEY
 
 # Define the cache directory for persistent storage
-cache_dir = "/mnt/data/models"
+cache_dir = "/mnt/data/models/checkpoint-1622"
 
 # Ensure the cache directory exists
 os.makedirs(cache_dir, exist_ok=True)
