@@ -574,6 +574,52 @@ form button,
   background-color: #0056b3;
 }
 
+/* media */
+
+@media (max-width: 1100px) {
+    .modal {
+        width: 900px;
+    }
+}
+
+@media (max-width: 900px) {
+    .modal {
+        width: 700px;
+    }
+
+    #modal-title{
+        font-size: 1.2em;
+    }
+
+    .tab-box .tab-btn{
+        font-size: 14px;
+    }
+
+}
+
+@media (max-width: 730px) {
+    .modal {
+        height: 500px;
+        width: 500px;
+    }
+
+    .tab-box .tab-btn{
+        padding: 10px;
+    }
+
+    .content-box{
+        padding: 10px;
+    }
+
+    .content-box .content.active{
+        height: 200px;
+    }
+
+    #modal-title{
+        text-align: center;
+    }
+}
+
 @media (max-width: 850px) {
   .image-divs {
       flex-direction: column;
@@ -622,6 +668,12 @@ form button,
   }
 }
 
+@media (max-width: 500px) {
+    .modal {
+        width: 100%;
+    }
+}
+
 @media (max-width: 420px){
   .camera-video{
       width: 100%;
@@ -655,4 +707,18 @@ form button,
     height: 200px;
 
 }
+}
+
+@media (max-width: 360px) {
+    .modal{
+        padding: 10px;
+    }
+
+    .tab-container{
+        padding: 15px;
+    }
+
+    .content-box .content.active{
+        height: 230px;
+    }
 }

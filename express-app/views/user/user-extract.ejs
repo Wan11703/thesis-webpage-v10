@@ -413,6 +413,8 @@
     const scanButton = document.getElementById("scan"); // Scan button
     // const open = document.getElementById("open");
 
+    const saveBtn = document.querySelector("#save");
+
 
     const tabActive = document.querySelector(".tabs");
     const loaderActive = document.querySelector(".loader");
@@ -503,7 +505,7 @@
       loaderActive.classList.remove("active");
       tabActive.classList.remove("active");
       back.classList.remove("active");
-      // saveBtn.classList.remove("active");
+      saveBtn.classList.remove("active");
 
       selectorDiv.classList.add("active");
       modalTitle.textContent = "Extraction Results";
@@ -523,7 +525,7 @@
       loaderActive.classList.add("active");
       tabActive.classList.remove("active");
       selectorDiv.classList.remove("active");
-      // saveBtn.classList.remove("active");
+      saveBtn.classList.remove("active");
       back.classList.remove("active");
       modalTitle.textContent = "Extraction Results";
     });
@@ -565,7 +567,7 @@
         loaderActive.classList.remove("active");
         tabActive.classList.add("active");
         back.classList.add("active");
-        // saveBtn.classList.add("active");
+        saveBtn.classList.add("active");
         text.innerHTML = "";
 
 
