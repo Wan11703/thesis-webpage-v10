@@ -18,15 +18,25 @@
         <div class="logo">
           <h1><a href="#">MedExtract</a></h1>
         </div>
-
-        <ul class="nav">
+  
+        <div class="menu-toggle" id="user-menu-toggle">&#9776;</div> <!-- Unique ID -->
+  
+        <ul class="nav" id="user-nav">
+          <li class="username-holder">Hey there! <%= username %>
+          </li>
           <li><a href="/user-extract">Extract</a></li>
           <li><a href="/user-search">Search</a></li>
           <li><a href="/user-settings">Settings</a></li>
-          <li><a href="/">Log Out</a></li>
+          <li><a href="/logout" onclick="confirmLogout()">Log Out</a></li>
         </ul>
       </div>
     </nav>
+
+    <div class="message-container">
+      <div class="container">
+          <div class="server-message">SERVER MESSAGE WILL SHOW HERE</div>
+      </div>
+  </div>
 
     <main class="search-function">
       <div class="container">
@@ -49,9 +59,9 @@
             <div class="loading">
               <div class="text">Generating medical insight... Please wait.</div>
               <!-- <div class="percent"> 100%</div> -->
-              <div class="progress-bar">
+              <!-- <div class="progress-bar">
                 <div class="progress"></div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -101,7 +111,11 @@
             </div>
           </div>
         </div>
-        <button id="close">Close</button>
+        <div class="modal-buttons">
+          <button type="button" id="save" onclick="saveData();">Save</button>
+          <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
+          <button type="button" id="close">Close</button>
+        </div>
       </div>
     </div>
 
@@ -176,6 +190,68 @@
           contents[index].classList.add("active");
         });
       });
+
+      const saveButton = document.getElementById("save");
+
+    function saveData() {
+      const modalTitle = document.querySelector("#modal-title");
+      var medicineName = modalTitle.textContent.slice(17);
+      
+
+      const data = { medicineName, drug_information, interactions, indications, side_effects, price };
+
+      // Fetch to send data to backend
+      fetch('/user/save-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => {
+          if (response.ok) {
+            showServerMessageModal("Data saved successfully!", true);
+          } else {
+            
+            showServerMessageModal("Failed to save data.", false);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showServerMessageModal("An error occurred while saving.", false);
+        });
+    }
+
+    serverMessage = document.querySelector(".server-message");
+        serverMessageContainer = document.querySelector(".message-container .container");
+        serverMessageModal = document.querySelector(".server-message-modal");
+
+    function showServerMessage(message, isSuccess = true) {
+      serverMessage.innerHTML = message;
+      serverMessage.style.cssText = isSuccess
+        ? "background-color: #D4EDDA; color: #1B5E20;"
+        : "background-color: #F8D7DA; color: #B71C1C;";
+      serverMessage.classList.add("active");
+      serverMessageContainer.classList.add("active");
+
+      setTimeout(() => {
+        serverMessage.classList.remove("active");
+        serverMessageContainer.classList.remove("active");
+      }, 4000);
+    }
+
+    function showServerMessageModal(message, isSuccess = true) {
+      serverMessageModal.innerHTML = message;
+      serverMessageModal.style.cssText = isSuccess
+        ? "background-color: #D4EDDA; color: #1B5E20;"
+        : "background-color: #F8D7DA; color: #B71C1C;";
+      serverMessageModal.classList.add("active");
+
+
+      setTimeout(() => {
+        serverMessageModal.classList.remove("active");
+      }, 4000);
+    }
 
     </script>
   </body>
