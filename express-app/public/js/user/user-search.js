@@ -82,7 +82,7 @@ open.addEventListener('click', () => {
     count = 0;
     per = 0;
     // progress.style.width = "0px"; // Reset progress bar width
-    loading = setInterval(animate, 150); // Start the animation
+    loading = setInterval(animate, 250); // Start the animation
 
     // Send the drug name to the backend
     fetch('https://thesis-webpage-v10-production-55fa.up.railway.app/get-drug-info', {

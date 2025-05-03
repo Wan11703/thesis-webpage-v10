@@ -13,7 +13,7 @@
   <nav class="user-navbar">
     <div class="container">
       <div class="logo">
-        <h1><a href="#">MedExtract</a></h1>
+        <h1><a href="/user-extract">MedExtract</a></h1>
       </div>
 
       <div class="menu-toggle" id="user-menu-toggle">&#9776;</div> <!-- Unique ID -->
@@ -175,11 +175,12 @@
       </div>
       <div class="modal-buttons">
         <div class="modal-buttons2">
-          <button type="button" id="save" onclick="saveData();">Save</button>
+        <button type="button" id="save" onclick="saveData();">Save</button>
         <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
         </div>
         
         <div class="modal-buttons3">
+          
           <button id="back">Back</button>
           <button id="close">Close</button>
         </div>
@@ -192,10 +193,9 @@
       <div class="f-1">
         <h2>MedExtract</h2>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-          id aspernatur itaque cumque vitae odit sint eligendi nam libero
-          voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-          eos a.
+          Empowering healthcare through intelligent data. Our platform 
+          simplifies clinical narratives, making vital insights easier to access,
+           understand, and act upon for better patient care outcomes.
         </p>
       </div>
 
@@ -203,9 +203,9 @@
         <div>
           <h2>Links</h2>
           <ul class="nav">
-            <li><a href="#">Extract</a></li>
-            <li><a href="#">Search</a></li>
-            <li><a href="#">Settings</a></li>
+            <li><a href="/user-extract">Extract</a></li>
+            <li><a href="/user-search">Search</a></li>
+            <li><a href="/user-settings">Settings</a></li>
             <li><a href="/logout" onclick="confirmLogout()">Log Out</a></li>
           </ul>
         </div>
@@ -458,7 +458,7 @@
       count = 0;
       per = 0;
       // progress.style.width = "0px"; // Reset progress bar width
-      loading = setInterval(animate, 150); // Start the animation
+      loading = setInterval(animate, 250); // Start the animation
 
       const imageUrl = `https://thesis-webpage-v10-production.up.railway.app/api/image-proxy/${userId}`; // FRONT-END URL
       // const imageUrl = "https://thesis-webpage-v10-production.up.railway.app/api/image-proxy/{user_id}";
@@ -704,7 +704,7 @@
       count = 0;
       per = 0;
       // progress.style.width = "0px"; // Reset progress bar width
-      loading = setInterval(animate2, 150); // Start the animation
+      loading = setInterval(animate2, 250); // Start the animation
       loaderActive.classList.add("active");
 
       selectorDiv.classList.remove("active");
@@ -787,7 +787,8 @@
       })
         .then(response => response.json().then(json => {
           if (!response.ok) throw new Error(json.message);
-          showServerMessageModal(json.message);
+          // showServerMessageModal(json.message);
+          showServerMessageModal("Successful!");
         }))
         .catch(error => {
           console.error('Error:', error);

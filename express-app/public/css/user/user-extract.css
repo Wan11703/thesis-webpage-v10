@@ -39,6 +39,7 @@ form button,
 
 #back.active {
     display: block;
+    margin-right: auto;
 }
 
 
@@ -740,6 +741,6 @@ form button,
     }
 
     .content-box .content.active{
-        height: 270px;
+        height: 300px;
     }
 }
