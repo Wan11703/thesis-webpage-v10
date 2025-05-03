@@ -723,7 +723,14 @@ form button,
 
     .modal-buttons{
         font-size: 12px;
+        
     }
+
+    #close,
+#back,
+#save {
+    width: 40px;
+}
 
     .tab-container{
         padding: 15px;
