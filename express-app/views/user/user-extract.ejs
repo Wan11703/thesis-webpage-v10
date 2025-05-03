@@ -37,7 +37,7 @@
 
   <main class="app">
 
-    <div class="header upper">
+    <div class="header">
       <h2>Upload Image Here To Scan</h2>
       <!-- <div class="server-message"></div> -->
 
@@ -56,7 +56,7 @@
 >
 <button class="camera-btn" onclick="document.getElementById('mobileCameraInput').click()">Open Camera</button>-->
 
-      <input type="file" accept="image/png, image/jpeg, image/jpg" capture="environment" style="display: none;" id="mobileCameraInput"
+      <input type="file" accept="image/*" capture="environment" style="display: none;" id="mobileCameraInput"
         onchange="handleMobileCapture(this)">
       <button class="camera-btn" onclick="document.getElementById('mobileCameraInput').click()">Open Camera</button>
 
@@ -104,7 +104,7 @@
       </form>
 
       <form id="saved-form">
-        <div class="header lower">
+        <div class="header">
           <h3>Uploaded Image</h3>
           <div class="buttons">
             <button id="scan" type="button" onclick="ScanImage()">Scan</button>
