@@ -248,6 +248,8 @@
     serverMessageContainer = document.querySelector(".message-container .container");
     serverMessageModal = document.querySelector(".server-message-modal");
 
+    savedImages = JSON.parse('<%- JSON.stringify(images) %>');
+
     deleteImages = [];
 
     function confirmLogout() {
