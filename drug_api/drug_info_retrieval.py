@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS  # Import Flask-CORS
 import pandas as pd
 import openai
-from config import OPENAI_API_KEY
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -14,7 +13,9 @@ df_path = os.path.join(current_dir,'drugbank_clean.csv')
 df_prepared_path = os.path.join(current_dir,'drug_information.csv')
 
 # Use the imported API key
-openai.api_key = OPENAI_API_KEY
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 
 def get_drug_info(drug_name):
     try:
@@ -126,5 +127,4 @@ def process_raw_text():
 
 
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+
