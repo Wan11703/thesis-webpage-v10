@@ -22,6 +22,7 @@
     "mysql": "^2.18.1",
 <<<<<<< HEAD
     "mysql2": "^3.14.0",
+<<<<<<< HEAD
     "nodemailer": "^6.10.1"
 =======
     "mysql2": "^3.14.0"
@@ -29,5 +30,8 @@
   "devDependencies": {
     "nodemon": "^3.1.9"
 >>>>>>> parent of ad43a6a (bomb)
+=======
+ 
+    "nodemailer": "^6.10.1" }
+>>>>>>> parent of 93355b3 (another bomb)
   }
-}
