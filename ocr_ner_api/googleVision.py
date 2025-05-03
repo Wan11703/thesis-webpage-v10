@@ -72,10 +72,17 @@ from app2 import extract_drug_names
 # Set up your OpenAI API key
 openai.api_key = OPENAI_API_KEY
 
+# Define the cache directory for persistent storage
+cache_dir = "/mnt/data/models"
+
+# Ensure the cache directory exists
+os.makedirs(cache_dir, exist_ok=True)
+
 # Load the fine-tuned model and tokenizer
 model_path = "vincentmark/biobert-ner"
-model = BertForTokenClassification.from_pretrained(model_path)
-tokenizer = BertTokenizer.from_pretrained(model_path)
+# Load model and tokenizer from Hugging Face with cache directory
+model = BertForTokenClassification.from_pretrained(model_path, cache_dir=cache_dir)
+tokenizer = BertTokenizer.from_pretrained(model_path, cache_dir=cache_dir)
 
 # Function to get the path of a local image in the same folder
 @app.post("/process-image")
