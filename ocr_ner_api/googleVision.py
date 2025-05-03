@@ -38,48 +38,20 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 app = FastAPI(title="OCR and NER API", version="1.0.0")
-
-def get_image_from_db(user_id):
-    """Fetches the image from the database for the given user_id."""
-    
-    # Parse the DB_URL
-    result = urlparse(DB_URL)
     
     # Prepare the database connection details
-    db_config = {
-        'user': result.username,
-        'password': result.password,
-        'host': result.hostname,
-        'port': result.port,
-        'database': result.path[1:],  # Remove the leading '/' from the path (database name)
-        'charset': 'utf8mb4'
-        
-    }
+def get_image_from_db(user_id):
+    """Fetches the image from the database for the given user_id."""
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
+    row = cursor.fetchone()
+    cursor.close()
+    conn.close()
 
-    try:
-        # Connect to the MySQL database
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor()
-
-        # Execute the query to fetch the image data
-        cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
-        row = cursor.fetchone()
-
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
-
-        # Check if row exists and contains image data
-        if row and row[0]:
-            image_data = row[0]  # The image
-            image_type = row[1] if row[1] else "image/jpeg"  # Default to "image/jpeg" if image_type is None
-            return image_data, image_type
-        else:
-            print(f"Error: No image found for user_id {user_id}.")
-            return None, None
-        
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
+    if row and row[0]:
+        return row[0], row[1] or "image/jpeg"
+    else:
         return None, None
 
 # Add CORS middleware to allow requests from your frontend
