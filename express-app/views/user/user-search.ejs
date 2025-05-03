@@ -75,7 +75,7 @@
                 <button class="tab-btn">Dosage Guidelines</button>
                 <button class="tab-btn">Side Effects</button>
                 <button class="tab-btn">Drug Prices</button>
-                <div class="line"></div>
+                <!-- <div class="line"></div> -->
               </div>
               <div class="content-box">
                 <div class="content active" id="drug_information">
@@ -180,9 +180,9 @@
             tab.classList.remove("active");
           });
           tab.classList.add("active");
-          var line = document.querySelector(".line");
-          line.style.width = e.target.offsetWidth + "px";
-          line.style.left = e.target.offsetLeft + "px";
+          // var line = document.querySelector(".line");
+          // line.style.width = e.target.offsetWidth + "px";
+          // line.style.left = e.target.offsetLeft + "px";
 
           contents.forEach((content) => {
             content.classList.remove("active");
@@ -196,6 +196,11 @@
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
       var medicineName = modalTitle.textContent.slice(17);
+      const drug_information = document.querySelector("#drug_information").textContent;
+      const interactions = document.querySelector("#interactions").textContent;
+      const indications = document.querySelector("#indications").textContent;
+      const side_effects = document.querySelector("#side_effects").textContent;
+      const price = document.querySelector("#price").textContent;
       
 
       const data = { medicineName, drug_information, interactions, indications, side_effects, price };
@@ -252,6 +257,15 @@
         serverMessageModal.classList.remove("active");
       }, 4000);
     }
+
+    // nav
+
+    const userToggle = document.getElementById('user-menu-toggle');
+    const userNav = document.getElementById('user-nav');
+
+    userToggle.addEventListener('click', () => {
+      userNav.classList.toggle('show');
+    });
 
     </script>
   </body>

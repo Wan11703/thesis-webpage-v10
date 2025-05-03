@@ -761,11 +761,11 @@
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
       const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      const drug_information = document.querySelector("#drug_information");
-          const interactions = document.querySelector("#interactions");
-const indications = document.querySelector("#indications");
-const side_effects = document.querySelector("#side_effects");
-const price = document.querySelector("#price");
+      const drug_information = document.querySelector("#drug_information").textContent;
+      const interactions = document.querySelector("#interactions").textContent;
+      const indications = document.querySelector("#indications").textContent;
+      const side_effects = document.querySelector("#side_effects").textContent;
+      const price = document.querySelector("#price").textContent;
 
 const data = { medicineName, drug_information, interactions, indications, side_effects, price };
 
