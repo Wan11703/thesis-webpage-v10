@@ -414,7 +414,7 @@
     const back = document.getElementById("back");
 
 
-    const modalTitle = document.querySelector("#modal-title");
+    var modalTitle = document.querySelector("#modal-title");
     const scanButton = document.getElementById("scan"); // Scan button
     // const open = document.getElementById("open");
 
@@ -752,7 +752,6 @@
 
           // stuff
 
-          var modalTitle = document.querySelector("#modal-title");
           var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
 
           // Store the extracted values in the global object 'medicineData'
