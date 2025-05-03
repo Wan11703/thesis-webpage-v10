@@ -18,9 +18,22 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from fastapi import Request
-from config import AZURE_ENDPOINT, AZURE_API_KEY, OPENAI_API_KEY, DB_CONFIG
+ # from config import AZURE_ENDPOINT, AZURE_API_KEY, OPENAI_API_KEY, DB_CONFIG
 import mysql.connector
 from io import BytesIO
+
+
+AZURE_ENDPOINT = os.getenv('AZURE_ENDPOINT')
+AZURE_API_KEY = os.getenv('AZURE_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+DB_CONFIG = {
+    'user': os.getenv('DB_USERNAME'),
+    'password': os.getenv('DB_ROOT_PASSWORD'),
+    'host': os.getenv('DB_HOST'),
+    'port': os.getenv('DB_PORT'),
+    'database': os.getenv('DATABASE')
+}
+
 
 
 # Get the directory where this script (googleVision.py) lives
