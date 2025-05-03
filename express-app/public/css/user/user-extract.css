@@ -24,7 +24,7 @@ form button,
 }
 
 #save {
-    margin-right: auto;
+    /* margin-right: auto; */
     display: none;
 }
 
@@ -359,6 +359,7 @@ form button,
 .text {
     margin-bottom: 20px;
     font-size: 32px;
+    text-align: center;
 }
 
 .text-blink {
@@ -413,7 +414,13 @@ form button,
 .modal-buttons {
     display: flex;
     margin-top: 20px;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */
+    gap: 20px;
+}
+
+.modal-buttons2{
+    align-self: flex-end;
+    display: flex;
     gap: 20px;
 }
 

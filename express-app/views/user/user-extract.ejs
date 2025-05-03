@@ -181,8 +181,10 @@
       <div class="modal-buttons">
         <button type="button" id="save" onclick="saveData();">Save</button>
         <div class="server-message-modal">SERVER MESSAGE WILL SHOW HERE</div>
-        <button id="back">Back</button>
-        <button id="close">Close</button>
+        <div class="modal-buttons2">
+          <button id="back">Back</button>
+          <button id="close">Close</button>
+        </div>
       </div>
     </div>
   </div>
@@ -761,11 +763,11 @@
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
       const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      const drug_information = document.querySelector("#drug_information").textContent;
-      const interactions = document.querySelector("#interactions").textContent;
-      const indications = document.querySelector("#indications").textContent;
-      const side_effects = document.querySelector("#side_effects").textContent;
-      const price = document.querySelector("#price").textContent;
+      const drug_information_value = drug_information.innerHTML;
+      const interactions_value = interactions.innerHTML;
+      const indications_value = indications.innerHTML;
+      const side_effects_value = side_effects.innerHTML;
+      const price_value =  price.innerHTML;
 
 const data = { medicineName, drug_information, interactions, indications, side_effects, price };
 
