@@ -395,9 +395,9 @@
           tab.classList.remove("active");
         });
         tab.classList.add("active");
-        var line = document.querySelector(".line");
-        line.style.width = e.target.offsetWidth + "px";
-        line.style.left = e.target.offsetLeft + "px";
+        // var line = document.querySelector(".line");
+        // line.style.width = e.target.offsetWidth + "px";
+        // line.style.left = e.target.offsetLeft + "px";
 
         contents.forEach((content) => {
           content.classList.remove("active");
@@ -766,11 +766,11 @@
     function saveData() {
       var modalTitle = document.querySelector("#modal-title");
       var medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      var drug_information_value = document.querySelector("#drug_information p").textContent;
-      var interactions_value = document.querySelector("#interactions p").textContent;
-      var indications_value = document.querySelector("#indications p").textContent;
-      var side_effects_value = document.querySelector("#side_effects p").textContent;
-      var price_value =  document.querySelector("#price p").textContent;
+      var drug_information_value = document.querySelector("#drug_information #text").textContent;
+      var interactions_value = document.querySelector("#interactions #text").textContent;
+      var indications_value = document.querySelector("#indications #text").textContent;
+      var side_effects_value = document.querySelector("#side_effects #text").textContent;
+      var price_value =  document.querySelector("#price #text").textContent;
 
 const data = { medicineName, drug_information_value, interactions_value, indications_value, side_effects_value, price_value };
 
