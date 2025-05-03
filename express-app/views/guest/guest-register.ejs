@@ -13,20 +13,29 @@
 <body>
     <nav class="guest-navbar">
         <div class="container">
-            <div class="logo">
-                <h1><a href="#">MedExtract</a></h1>
-            </div>
-
-            <ul class="nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/html/guest/guest-about.html">About</a></li>
-                <li><a href="/guest-login">Login</a></li>
-                <li><a href="/guest-register">Register</a></li>
-              </ul>
+          <div class="logo">
+            <h1><a href="#">MedExtract</a></h1>
+          </div>
+    
+          <div class="menu-toggle" id="menu-toggle">&#9776;</div> <!-- Burger icon -->
+    
+          <ul class="nav" id="guest-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/html/guest/guest-about.html">About</a></li>
+            <li><a href="/guest-login">Login</a></li>
+            <li><a href="/guest-register">Register</a></li>
+          </ul>
+    
         </div>
-    </nav>
+      </nav>
 
-    <section class="login">
+    <div class="message-container">
+        <div class="container">
+            <div class="server-message">SERVER MESSAGE WILL SHOW HERE</div>
+        </div>
+    </div>
+
+    <section class="register">
         <div class="container">
             <form id="form" action="/register" method="POST">
                 <h1>Registration</h1>
@@ -93,7 +102,7 @@
                         <li><a href="/html/guest/guest-about.html">About</a></li>
                         <li><a href="/guest-login">Login</a></li>
                         <li><a href="/guest-register">Register</a></li>
-                      </ul>
+                    </ul>
                 </div>
             </div>
 
@@ -130,6 +139,9 @@
         const toggle1 = document.getElementById("show-password1");
         const toggle2 = document.getElementById("show-password2");
 
+        serverMessage = document.querySelector(".server-message");
+        serverMessageContainer = document.querySelector(".message-container .container");
+
         toggle1.addEventListener("click", () => {
             if (toggle1.checked) {
                 password1.setAttribute("type", "text");
@@ -150,15 +162,12 @@
             e.preventDefault(); // Prevent the default form submission
             validateInputs();
 
-            // Check if all inputs are valid
             const errors = document.querySelectorAll(".error");
             const hasErrors = Array.from(errors).some((error) => error.innerText !== "");
 
             if (!hasErrors) {
                 sendUserDataToServer(); // Submit the form if there are no errors
             }
-
-
         });
 
         function sendUserDataToServer() {
@@ -169,23 +178,23 @@
                 body: formData,
             })
                 .then(async (response) => {
-                    const message = await response.text(); // Extract the response text
+                    const message = await response.text();
 
                     if (!response.ok) {
-                        // If the response status is not 200, throw an error with the message
-                        throw new Error(message);
+                        throw new Error(message); // Will go to catch
                     }
 
-                    // Handle success
-                    modalTitle.textContent = "User Registered Successfully!";
-                    modal_container.classList.add("show");
+                    showServerMessage(message); // ✅ Show success message
+
+                    setTimeout(() => {
+                        window.location.href = "/guest-login";
+                    }, 1500);
                 })
                 .catch((error) => {
-                    // Handle errors by displaying the error message in the modal
-                    modalTitle.textContent = error.message; // Set the error message in the modal
-                    modal_container.classList.add("show"); // Show the modal
+                    showServerMessage(error.message, false); // ❌ Show error message
                 });
         }
+
 
         const setError = (element, message) => {
             const inputControl = element.parentElement;
@@ -248,16 +257,27 @@
             }
         };
 
-        // modal
 
-        const open = document.getElementById("open");
-        const modal_container = document.getElementById("modal_container");
-        const modalTitle = document.querySelector("#modal-title");
-        const close = document.getElementById("close");
 
-        close.addEventListener('click', () => {
-            location.reload();
-            // modal_container.classList.remove('show');
+        function showServerMessage(message, isSuccess = true) {
+            serverMessage.innerHTML = message;
+            serverMessage.style.cssText = isSuccess
+                ? "background-color: #D4EDDA; color: #1B5E20;"
+                : "background-color: #F8D7DA; color: #B71C1C;";
+            serverMessage.classList.add("active");
+            serverMessageContainer.classList.add("active");
+
+            setTimeout(() => {
+                serverMessage.classList.remove("active");
+                serverMessageContainer.classList.remove("active");
+            }, 4000);
+        }
+
+        const toggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('guest-nav');
+
+        toggle.addEventListener('click', () => {
+            nav.classList.toggle('show');
         });
 
     </script>

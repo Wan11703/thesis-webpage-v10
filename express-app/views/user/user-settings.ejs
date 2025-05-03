@@ -16,16 +16,15 @@
                 <h1><a href="#">MedExtract</a></h1>
             </div>
 
-            <div class="current-user">
-                <h5 class="username-holder">Hey there! <%= username %>
-                </h5>
-            </div>
+            <div class="menu-toggle" id="user-menu-toggle">&#9776;</div> <!-- Unique ID -->
 
-            <ul class="nav">
+            <ul class="nav" id="user-nav">
+                <li class="username-holder">Hey there! <%= username %>
+                </li>
                 <li><a href="/user-extract">Extract</a></li>
                 <li><a href="/user-search">Search</a></li>
                 <li><a href="/user-settings">Settings</a></li>
-                <li><a href="/">Log Out</a></li>
+                <li><a href="/logout" onclick="confirmLogout()">Log Out</a></li>
             </ul>
         </div>
     </nav>
@@ -47,7 +46,7 @@
                     <button class="tab-btn">Account Security</button>
                     <button class="tab-btn">Delete Account</button>
                     <button class="tab-btn">Query History</button>
-                    <div class="line"></div>
+                    <!-- <div class="line"></div> -->
                 </div>
                 <div class="content-box">
                     <div class="content active">
@@ -134,7 +133,7 @@
                             <button class="tab-btn2">Dosage Guidelines</button>
                             <button class="tab-btn2">Side Effects</button>
                             <button class="tab-btn2">Drug Prices</button>
-                            <div class="line2"></div>
+                            <!-- <div class="line2"></div> -->
                         </div>
                         <div class="content-box2">
                             <div class="content2 active">
@@ -235,9 +234,9 @@
             tab.addEventListener('click', (e) => {
                 tabs.forEach(tab => { tab.classList.remove('active') });
                 tab.classList.add('active');
-                var line = document.querySelector('.line');
-                line.style.width = e.target.offsetWidth + "px";
-                line.style.left = e.target.offsetLeft + "px";
+                // var line = document.querySelector('.line');
+                // line.style.width = e.target.offsetWidth + "px";
+                // line.style.left = e.target.offsetLeft + "px";
 
                 contents.forEach(content => { content.classList.remove('active') });
                 contents[index].classList.add('active');
@@ -251,9 +250,10 @@
             tab.addEventListener('click', (e) => {
                 tabs.forEach(tab => { tab.classList.remove('active') });
                 tab.classList.add('active');
-                var line = document.querySelector('.line2');
-                line.style.width = e.target.offsetWidth + "px";
-                line.style.left = e.target.offsetLeft + "px";
+
+                // var line = document.querySelector('.line2');
+                // line.style.width = e.target.offsetWidth + "px";
+                // line.style.left = e.target.offsetLeft + "px";
 
                 contents2.forEach(content => { content.classList.remove('active') });
                 contents2[index].classList.add('active');
@@ -614,7 +614,7 @@
                 if (response.ok) {
                     const result = await response.json();
                     showServerMessageModal(result.message);
-                    setTimeout(() => location.reload(), 1500);
+                    setTimeout(() => location.reload(), 4000);
                 } else {
                     const result = await response.json();
                     showServerMessageModal(result.message || "Failed to delete history.", false);
@@ -642,17 +642,26 @@
         }
 
         function showServerMessageModal(message, isSuccess = true) {
-      serverMessageModal.innerHTML = message;
-      serverMessageModal.style.cssText = isSuccess
-        ? "background-color: #D4EDDA; color: #1B5E20;"
-        : "background-color: #F8D7DA; color: #B71C1C;";
-      serverMessageModal.classList.add("active");
+            serverMessageModal.innerHTML = message;
+            serverMessageModal.style.cssText = isSuccess
+                ? "background-color: #D4EDDA; color: #1B5E20;"
+                : "background-color: #F8D7DA; color: #B71C1C;";
+            serverMessageModal.classList.add("active");
 
 
-      setTimeout(() => {
-        serverMessageModal.classList.remove("active");
-      }, 4000);
-    }
+            setTimeout(() => {
+                serverMessageModal.classList.remove("active");
+            }, 4000);
+        }
+
+        // nav
+
+        const userToggle = document.getElementById('user-menu-toggle');
+        const userNav = document.getElementById('user-nav');
+
+        userToggle.addEventListener('click', () => {
+            userNav.classList.toggle('show');
+        });
 
 
 

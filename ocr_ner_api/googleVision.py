@@ -42,34 +42,38 @@ app = FastAPI(title="OCR and NER API", version="1.0.0")
 
 def get_image_from_db(user_id):
     """Fetches the image from the database for the given user_id."""
-    
     # Parse the DB_URL
-result = urlparse(DB_URL)
-    
-# Prepare the database connection details
-db_config = {
-    'user': result.username,
-    'password': result.password,
-    'host': result.hostname,
-    'port': result.port,
-    'database': result.path[1:],  # Remove the leading '/' from the path (database name)
-    'charset': 'utf8mb4'
-        
-}
+    result = urlparse(DB_URL)
 
-        # Prepare the database connection details
-def get_image_from_db(user_id):
-    """Fetches the image from the database for the given user_id."""
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
-    row = cursor.fetchone()
-    cursor.close()
-    conn.close()
+    # Prepare the database connection details
+    db_config = {
+        'user': result.username,
+        'password': result.password,
+        'host': result.hostname,
+        'port': result.port,
+        'database': result.path[1:],  # Remove the leading '/' from the path (database name)
+        'charset': 'utf8mb4'
+    }
 
-    if row and row[0]:
-        return row[0], row[1] or "image/jpeg"
-    else:
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        # Explicitly set the character set to utf8mb4
+        cursor.execute("SET NAMES utf8mb4;")
+
+        # Execute the query to fetch the image
+        cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
+        row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if row and row[0]:
+            return row[0], row[1] or "image/jpeg"
+        else:
+            return None, None
+    except mysql.connector.Error as e:
+        print(f"Database error: {e}")
         return None, None
 
 # Add CORS middleware to allow requests from your frontend
@@ -108,38 +112,44 @@ async def process_image(request: Request):
     print(f"Received data: {data}")
     
     user_id = data.get("user_id")
+    image_url = data.get("image_url")  # Get the image_url from the request payload
 
-    if not user_id:
-        return JSONResponse(content={"error": "No user_id provided"}, status_code=400)
-    print(f"Processing image for user_id: {user_id}")
+    if not user_id and not image_url:
+        return JSONResponse(content={"error": "No user_id or image_url provided"}, status_code=400)
+    
+    print(f"Processing image for user_id: {user_id} or image_url: {image_url}")
 
     temp_image_path = None
 
     try:
-        image_data, image_type = get_image_from_db(user_id)
-        if not image_data:
-            return JSONResponse(content={"error": "Image not found in database"}, status_code=404)
-       
-        image = Image.open(BytesIO(image_data))
-        temp_image_path = f"temp_image_{user_id}.jpg"
+        if user_id:
+            # Fetch image from the database
+            image_data, image_type = get_image_from_db(user_id)
+            if not image_data:
+                return JSONResponse(content={"error": "Image not found in database"}, status_code=404)
+            image = Image.open(BytesIO(image_data))
+        elif image_url:
+            # Fetch image from the provided URL
+            response = requests.get(image_url)
+            if response.status_code != 200:
+                return JSONResponse(content={"error": "Failed to fetch image from URL"}, status_code=400)
+            image_data = response.content
+            image = Image.open(BytesIO(image_data))
+
+        # Save the image to a temporary file
+        temp_image_path = f"temp_image_{user_id or 'url'}.jpg"
         image.save(temp_image_path)
         print(f"Image saved to {temp_image_path}")
-        
-        
 
         # Process the image
         raw_text, corrected_text, formatted_text, extracted_medicine_names = detect_text_in_image(temp_image_path)
-
 
         return JSONResponse(content={
             "raw_text": raw_text,
             "corrected_text": corrected_text,
             "formatted_text": formatted_text,
             "medicineArray": extracted_medicine_names
-        
-        
         })
-    
 
     except Exception as e:
         print(f"Unexpected error: {str(e)}")
@@ -149,7 +159,6 @@ async def process_image(request: Request):
         if temp_image_path and os.path.exists(temp_image_path):
             os.remove(temp_image_path)
             print(f"Temporary image file {temp_image_path} deleted.")
-
 
 # Function to preprocess the image for better OCR accuracy
 def preprocess_image(temp_image_path):

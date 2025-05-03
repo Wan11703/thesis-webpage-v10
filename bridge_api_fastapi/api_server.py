@@ -57,7 +57,7 @@ latest_extracted_medicines = []
 @app.post("/api/process-image")
 async def process_image(request: Request):
     data = await request.json()
-    image_url = data.get("image_url")
+    # image_url = data.get("image_url")
     user_id = data.get("user_id")
 
     
@@ -65,7 +65,7 @@ async def process_image(request: Request):
         return JSONResponse(content={"error": "No user_id provided"}, status_code=403)
 
     # Use the proxy route on your Node server
-    image_url = f"https://thesis-webpage-v10-production.up.railway.app/api/image-proxy/{user_id}"
+    # image_url = f"https://thesis-webpage-v10-production.up.railway.app/api/image-proxy/{user_id}"
     # image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
     
 
@@ -73,7 +73,7 @@ async def process_image(request: Request):
         # Forward the proxy URL to googleVision.py
         response = requests.post(
             "https://thesis-webpage-v10-production-c1fa.up.railway.app/process-image",
-            json={"image_url": image_url, "user_id": user_id}
+            json={"user_id": user_id}
         )
         if response.status_code == 200:
             return JSONResponse(content=response.json())

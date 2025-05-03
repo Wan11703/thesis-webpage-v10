@@ -8,27 +8,32 @@ body {
 
 *,
 *::before,
-*::after{
+*::after {
   box-sizing: border-box;
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   font-family: "Poppins";
 }
 
-a{
+a {
   text-decoration: none;
 }
 
-a{
+a {
   color: white;
+}
+
+.username-holder{
+  border: 1px solid white;
+  padding: 10px;
 }
 
 /* headings and font size*/
 
-html{
+html {
   font-size: 1em;
 }
 
@@ -58,7 +63,7 @@ h6 {
 
 /* flexbox */
 
-.container{
+.container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px;
@@ -66,102 +71,116 @@ h6 {
 
 /* guest navbar */
 
-.guest-navbar{
+.guest-navbar {
   height: 60px;
   display: flex;
   background-color: black;
 }
 
-.guest-navbar .container{
+.guest-navbar .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
-.guest-navbar ul{
+.guest-navbar ul {
   display: flex;
   list-style: none;
   column-gap: 20px;
 }
 
+/* Burger icon */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: white;
+}
+
 /* user navbar */
 
-.user-navbar{
+#user-nav {
+  align-items: center;
+  margin: 10px;
+}
+
+.user-navbar {
   color: white;
   height: 60px;
   display: flex;
   background-color: black;
 }
 
-.user-navbar .container{
+.user-navbar .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
-.user-navbar ul{
+.user-navbar ul {
   display: flex;
   list-style: none;
   column-gap: 20px;
+  text-align: left;
 }
 
 /* footer */
 
-.footer{
+.footer {
   height: 230px;
   display: flex;
   background-color: #0288D1;
   color: white;
 }
 
-.footer .container{
+.footer .container {
   display: flex;
   align-items: center;
   width: 100%;
   gap: 20px;
 }
 
-.footer ul{
+.footer ul {
   display: flex;
   flex-direction: column;
   list-style: none;
   gap: 10px;
 }
 
-.f-1{
+.f-1 {
   flex: 2;
 }
 
-.f-2{
+.f-2 {
   flex: 1;
   display: flex;
   justify-content: center;
 }
 
-.f-3{
+.f-3 {
   flex: 2;
 }
 
-.contacts{
+.contacts {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.contacts div{
+.contacts div {
   display: flex;
 }
 
-.contacts div img{
+.contacts div img {
   width: 24px;
   height: 24px;
 }
 
 /* server message */
 
-.message-container .container{
+.message-container .container {
   padding: 10px 30px;
   display: none;
 }
@@ -181,9 +200,18 @@ h6 {
   border: 2px solid black;
   display: none;
   align-self: center;
+  margin: 0px 10px;
+
 }
 
-.message-container .container.active{
+@media (max-width: 730px) {
+  .server-message-modal {
+    width: 100%;
+    font-size: 12px;
+  }
+}
+
+.message-container .container.active {
   padding: 10px 30px;
   display: block;
 }
@@ -193,5 +221,139 @@ h6 {
 }
 
 .server-message-modal.active {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* media */
+
+@media (max-width: 768px) {
+  .guest-navbar .nav {
+    display: none;
+    flex-direction: column;
+    background-color: black;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .guest-navbar .nav.show {
+    display: flex;
+    padding: 20px;
+    background-color: #333333;
+
+  }
+
+  #user-nav {
+    align-items: flex-start;
+    margin: 0px;
+  }
+
+  .username-holder {
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: block;
+
+  }
+
+  .user-navbar .nav {
+    display: none;
+    flex-direction: column;
+    background-color: black;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 10px 0;
+
+
+
+  }
+
+  .user-navbar .nav.show {
+    display: flex;
+    padding: 20px;
+    background-color: #333333;
+    z-index: 1;
+
+
+  }
+
+  .user-navbar .username-holder {
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .footer .container {
+    flex-direction: column;
+  
+  }
+  
+  .footer {
+    height: auto;
+  }
+  
+  .f-2 {
+  
+    width: 100%;
+  }
+  
+  .f-2 div {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .footer ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 10px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .footer .container {
+    flex-direction: column;
+
+  }
+
+  .footer {
+    height: auto;
+  }
+
+  .f-2 {
+
+    width: 100%;
+  }
+
+  .f-2 div {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 410px) {
+  .f-2 div{
+    flex-direction: column;
+  }
 }

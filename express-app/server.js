@@ -533,6 +533,104 @@ app.delete("/user/delete-account", async (req, res) => {
     }
 });
 
+// account recovery ->
+
+const crypto = require("crypto"); // for secure random code generation
+const nodemailer = require("nodemailer"); // for sending email (assuming you want to email recovery code)
+
+// Setup your email transporter (use your real SMTP credentials)
+
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', // Example: Gmail. Change this based on your email provider.
+    auth: {
+        user: process.env.EMAIL_USER, // your email
+        pass: process.env.EMAIL_PASS  // your email app password
+    }
+});
+
+// --- Recovery Step 1: Request Recovery Code ---
+app.post("/recovery-request", formUpload.none(), (req, res) => {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).send("Email is required.");
+
+    dbConnection.query("SELECT * FROM user_tbl WHERE email = ?", [email], (err, results) => {
+        if (err) return res.status(500).send("Database error.");
+        if (results.length === 0) return res.status(400).send("If the email exists, a code was sent.");
+
+        const code = ("000000" + Math.floor(Math.random() * 999999)).slice(-6); // 6-digit code
+        const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes from now
+
+        const updateQuery = "UPDATE user_tbl SET recovery_code = ?, recovery_code_expires = ? WHERE email = ?";
+        dbConnection.query(updateQuery, [code, expires, email], (err) => {
+            if (err) return res.status(500).send("Failed to save recovery code.");
+
+            // Send email
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: "Your Recovery Code",
+                text: `Your MedExtract recovery code is: ${code}`
+            };
+
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) return res.status(500).send("Failed to send recovery email.");
+
+                res.status(200).send("If the email exists, a code was sent.");
+            });
+        });
+    });
+});
+
+// --- Recovery Step 2: Verify Recovery Code ---
+app.post("/recovery-verify", formUpload.none(), (req, res) => {
+    const { email, code } = req.body;
+
+    if (!email || !code) return res.status(400).send("Email and code are required.");
+
+    dbConnection.query("SELECT * FROM user_tbl WHERE email = ?", [email], (err, results) => {
+        if (err) return res.status(500).send("Database error.");
+        if (results.length === 0) return res.status(400).send("Invalid email or code.");
+
+        const user = results[0];
+        const now = new Date();
+
+        if (user.recovery_code !== code || now > user.recovery_code_expires) {
+            return res.status(400).send("Invalid or expired recovery code.");
+        }
+
+        // Mark email as validated for password reset (use session)
+        req.session.recoveryUser = { email: email };
+
+        res.status(200).send("Code verified. Proceed to change password.");
+    });
+});
+
+// --- Recovery Step 3: Reset Password ---
+app.post("/recovery-reset", formUpload.none(), (req, res) => {
+    const { password1 } = req.body;
+
+    if (!req.session.recoveryUser) return res.status(401).send("Unauthorized. Please verify your recovery code.");
+    if (!password1 || password1.length < 8) return res.status(400).send("Password must be at least 8 characters.");
+
+    bcrypt.hash(password1, 10, (err, hashedPassword) => {
+        if (err) return res.status(500).send("Password hashing failed.");
+
+        const updateQuery = "UPDATE user_tbl SET password = ?, recovery_code = NULL, recovery_code_expires = NULL WHERE email = ?";
+        dbConnection.query(updateQuery, [hashedPassword, req.session.recoveryUser.email], (err) => {
+            if (err) return res.status(500).send("Failed to update password.");
+
+            // Clear session
+            req.session.recoveryUser = null;
+
+            res.status(200).send("Password changed successfully!");
+        });
+    });
+});
+
+// <- account recovery
+
 
 
 
@@ -575,6 +673,8 @@ function saveUserInDB(userData, res) {
         });
     });
 }
+
+
 
 // esn-start | camera
 
