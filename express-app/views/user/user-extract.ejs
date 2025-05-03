@@ -883,36 +883,38 @@ const data = { medicineName, drug_information, interactions, indications, side_e
     };
 
     const handleMobileCapture = async (input) => {
-      const file = input.files[0];
-      if (!file) return;
+  const file = input.files[0];
+  if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64Image = reader.result;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64Image = reader.result;
 
-        try {
-          const response = await fetch("/save-image", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ image: base64Image })
-          });
+    try {
+      const response = await fetch("/save-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ image: base64Image })
+      });
 
-          const result = await response.json();
-          if (response.ok) {
-            showServerMessage("Image saved successfully.")
-          } else {
-            showServerMessage("Failed to save image.", false)
-          }
-        } catch (err) {
-          console.error("Upload error:", err);
-          showServerMessage("An error occurred while uploading the image.", false);
-        }
-      };
+      const result = await response.json();
+      if (response.ok) {
+        showServerMessage("Image saved successfully.");
+        setTimeout(() => location.reload(), 1000); // 🔁 Reload after 1 second
+      } else {
+        showServerMessage("Failed to save image.", false);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      showServerMessage("An error occurred while uploading the image.", false);
+    }
+  };
 
-      reader.readAsDataURL(file);
-    };
+  reader.readAsDataURL(file);
+};
+
 
     const showPreview = (dataUrl) => {
       const cameraDiv = document.getElementById("camera-div");
@@ -956,23 +958,28 @@ const data = { medicineName, drug_information, interactions, indications, side_e
     };
 
     const uploadImage = async () => {
-      if (!capturedImageBlob) return showServerMessage("No image to upload.", false);
+  if (!capturedImageBlob) return showServerMessage("No image to upload.", false);
 
-      try {
-        const res = await fetch("/save-image", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: capturedImageBlob })
-        });
+  try {
+    const res = await fetch("/save-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: capturedImageBlob })
+    });
 
-        const result = await res.json();
-        showServerMessage(result.message);
-        cancelUpload();
-      } catch (err) {
-        console.error("Upload error:", err);
-        showServerMessage("Failed to upload image.", false);
-      }
-    };
+    const result = await res.json();
+
+    if (res.ok) {
+      showServerMessage(result.message);
+      setTimeout(() => location.reload(), 1000); // 🔁 Reload after 1 second
+    } else {
+      showServerMessage("Failed to save image.", false);
+    }
+  } catch (err) {
+    console.error("Upload error:", err);
+    showServerMessage("Failed to upload image.", false);
+  }
+};
 
     // esn-end | camera
 
