@@ -52,7 +52,7 @@ def get_image_from_db(user_id):
         'host': result.hostname,
         'port': result.port,
         'database': result.path[1:],  # Remove the leading '/' from the path (database name)
-        'charset': 'utf8mb4' 
+        
     }
 
     try:
@@ -74,6 +74,7 @@ def get_image_from_db(user_id):
             image_type = row[1] if row[1] else "image/jpeg"  # Default to "image/jpeg" if image_type is None
             return image_data, image_type
         else:
+            print(f"Error: No image found for user_id {user_id}.")
             return None, None
         
     except mysql.connector.Error as err:
