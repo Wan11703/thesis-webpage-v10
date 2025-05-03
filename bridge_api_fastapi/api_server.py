@@ -70,7 +70,7 @@ async def process_image(request: Request):
     try:
         # Forward the proxy URL to googleVision.py
         response = requests.post(
-            "http://0.0.0.0:8080/process-image",
+            "thesis-webpage-v10-production-c1fa.up.railway.app/process-image",
             json={"image_url": image_url, "user_id": user_id}
         )
         if response.status_code == 200:

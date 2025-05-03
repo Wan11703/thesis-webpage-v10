@@ -407,7 +407,7 @@
       // fetchExtractedMedicines();
 
       try {
-        const response = await fetch("http://0.0.0.0:8081/api/process-image", {  // API_SERVER
+        const response = await fetch("thesis-webpage-v10-production-775f.up.railway.app/api/process-image", {  // API_SERVER
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -531,7 +531,7 @@
     // Fetch the extracted medicine names from the FastAPI endpoint
     async function fetchExtractedMedicines() {
       try {
-        const response = await fetch("http://0.0.0.0:8080/process-image", { // GOOGLE_VISION API
+        const response = await fetch("thesis-webpage-v10-production-c1fa.up.railway.app/process-image", { // GOOGLE_VISION API
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -614,7 +614,7 @@
     }
 
     // Listen for real-time updates using SSE
-    const eventSource = new EventSource("http://0.0.0.0:8081/api/stream-medicines"); // API_SERVER
+    const eventSource = new EventSource("thesis-webpage-v10-production-c1fa.up.railway.app/api/stream-medicines"); // API_SERVER
 
     eventSource.onmessage = (event) => {
       const medicines = JSON.parse(event.data);
