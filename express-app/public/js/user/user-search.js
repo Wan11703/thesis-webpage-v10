@@ -84,7 +84,7 @@ open.addEventListener('click', () => {
     loading = setInterval(animate, 150); // Start the animation
 
     // Send the drug name to the backend
-    fetch('http://localhost:5000/get-drug-info', {
+    fetch('https://thesis-webpage-v10-production-55fa.up.railway.app/get-drug-info', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

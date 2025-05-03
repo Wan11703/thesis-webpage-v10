@@ -604,7 +604,7 @@
 
     async function sendRawTextToBackend(rawText) {
       try {
-        const response = await fetch("http://127.0.0.1:5000/process-raw-text", { // Update URL as needed SEARCH -API
+        const response = await fetch("https://thesis-webpage-v10-production-55fa.up.railway.app/process-raw-text", { // Update URL as needed SEARCH -API
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -697,7 +697,7 @@
 
       // Fetch drug information from the API
       try {
-        const response = await fetch("http://127.0.0.1:5000/get-drug-info", { // SEARCH API
+        const response = await fetch("https://thesis-webpage-v10-production-55fa.up.railway.app/get-drug-info", { // SEARCH API
           method: "POST",
           headers: {
             "Content-Type": "application/json",
