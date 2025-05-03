@@ -62,8 +62,8 @@ const port = 3000;
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));  // Increase limit for JSON body
+app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Increase limit for URL-encoded data
 
 app.set("view engine", "ejs");
 
