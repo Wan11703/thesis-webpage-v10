@@ -21,18 +21,15 @@ from fastapi import Request
  # from config import AZURE_ENDPOINT, AZURE_API_KEY, OPENAI_API_KEY, DB_CONFIG
 import mysql.connector
 from io import BytesIO
+from urllib.parse import urlparse
 
 
 AZURE_ENDPOINT = os.getenv('AZURE_ENDPOINT')
 AZURE_API_KEY = os.getenv('AZURE_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-DB_CONFIG = {
-    'user': os.getenv('DB_USERNAME'),
-    'password': os.getenv('DB_ROOT_PASSWORD'),
-    'host': os.getenv('DB_HOST'),
-    'port': os.getenv('DB_PORT'),
-    'database': os.getenv('DATABASE')
-}
+# Get the DB_URL from environment variables
+DB_URL = os.getenv('DB_URL')  # DB_URL should be in the format: mysql://user:password@host:port/database
+
 
 
 
@@ -44,16 +41,42 @@ app = FastAPI(title="OCR and NER API", version="1.0.0")
 
 def get_image_from_db(user_id):
     """Fetches the image from the database for the given user_id."""
-    conn = mysql.connector.connect(**DB_CONFIG)
-    cursor = conn.cursor()
-    cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
-    row = cursor.fetchone()
-    cursor.close()
-    conn.close()
+    
+    # Parse the DB_URL
+    result = urlparse(DB_URL)
+    
+    # Prepare the database connection details
+    db_config = {
+        'user': result.username,
+        'password': result.password,
+        'host': result.hostname,
+        'port': result.port,
+        'database': result.path[1:],  # Remove the leading '/' from the path (database name)
+    }
 
-    if row and row[0]:
-        return row[0], row[1] or "image/jpeg"
-    else:
+    try:
+        # Connect to the MySQL database
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        # Execute the query to fetch the image data
+        cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
+        row = cursor.fetchone()
+
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+
+        # Check if row exists and contains image data
+        if row and row[0]:
+            image_data = row[0]  # The image
+            image_type = row[1] if row[1] else "image/jpeg"  # Default to "image/jpeg" if image_type is None
+            return image_data, image_type
+        else:
+            return None, None
+        
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
         return None, None
 
 # Add CORS middleware to allow requests from your frontend
