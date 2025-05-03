@@ -52,6 +52,7 @@ def get_image_from_db(user_id):
         'host': result.hostname,
         'port': result.port,
         'database': result.path[1:],  # Remove the leading '/' from the path (database name)
+        'charset': 'utf8mb4'
         
     }
 
